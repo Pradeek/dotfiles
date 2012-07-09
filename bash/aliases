@@ -1,0 +1,46 @@
+# General aliases
+#------------------
+alias ..='cd ..'
+alias c='clear'
+alias cl='cd ~ && clear'
+alias d='rm -rf'
+alias l='ls -alh --color=auto'
+alias la='ls -A --color=auto'
+alias ls='ls --color=auto'
+alias h='cd ~'
+alias q='exit'
+alias get='sudo apt-get install'
+alias del='sudo apt-get remove'
+
+#===============================
+
+# Reload bashrc
+#------------------
+alias reload='source ~/.bashrc'
+
+#===============================
+
+# Git
+#------------------
+alias g='git status'
+alias gl='git log --pretty=oneline --abbrev-commit --branches=* --graph --decorate'
+alias ga='git add .'
+alias gc='git commit -vam'
+alias gpl='git pull'
+alias gp='git push'
+alias gsa='git submodule add'
+
+#===============================
+
+# Functions 
+#------------------
+function ccd {
+	mkdir -p $1
+	cd $1
+}
+
+function gs {
+	cd $1
+	ls
+}
+#===============================

@@ -1,0 +1,15 @@
+export PATH=$PATH:~/bin #Add ~/bin to $PATH for custom programs
+
+# Add bash completion
+if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
+    . /etc/bash_completion
+fi
+
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm" # Load RVM function
+
+set -o vi # use vi key bindings
+
+
+rvm use 1.9.3
+
+clear
