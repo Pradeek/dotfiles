@@ -1,4 +1,8 @@
-export PATH=$PATH:~/bin #Add ~/bin to $PATH for custom programs
+export PATH=$PATH:~/bin # Add ~/bin to $PATH for custom programs
+
+export PATH=$PATH:~/bin/mongodb # Add mongodb to $PATH
+
+ln -s ~/Sublime\ Text\ 2/sublime_text ~/bin/subl # Add a symbolic link to Sublime Text 2
 
 # Add bash completion
 if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
@@ -9,7 +13,10 @@ fi
 
 set -o vi # use vi key bindings
 
+. ~/nvm/nvm.sh
+
 
 rvm use 1.9.3
+nvm use v0.8.11
 
 clear
