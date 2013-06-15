@@ -1,0 +1,9 @@
+# Makes bash autocomplete specific to a command once its typed
+bind '"\e[A": history-search-backward'
+bind '"\e[B": history-search-forward'
+bind '"\e[C": forward-char'
+bind '"\e[D": backward-char'
+
+#set show-all-if-ambiguous on # Lists choices instead of beeping
+set completion-ignore-case on # Case insensitive completion
+set history-preserve-point on # Remember cursor position of previous commands

@@ -1,46 +1,30 @@
 # General aliases
-#------------------
-alias ..='cd ..'
-alias c='clear'
-alias cl='cd ~ && clear'
-alias d='rm -rf'
-alias l='ls -alh --color=auto'
-alias la='ls -A --color=auto'
 alias ls='ls --color=auto'
-alias h='cd ~'
+alias sl=ls
+alias ll='ls -al'
+alias c='clear'
 alias q='exit'
-alias get='sudo apt-get install'
-alias del='sudo apt-get remove'
+alias ..='cd ..'
+alias ...='cd ../../'
+alias -- -='cd -' # Go back to previous directory
 
-#===============================
+alias tailf='tail -f'
 
-# Reload bashrc
-#------------------
-alias reload='source ~/.bashrc'
+alias py="python"
 
-#===============================
+alias refresh='source ~/.bashrc && clear'
+alias reload='source ~/.bashrc && clear'
+
+alias f='ffind'
+
+alias ipaddr="ifconfig | grep broadcast | grep inet | cut -d ' ' -f 2"
+alias webserver='python -m SimpleHTTPServer'
+
+# Mercurial
+alias diff='hg diff --git'
+alias import='hg import --no-commit'
+alias undo='hg revert --all'
+alias st='hg st'
 
 # Git
-#------------------
-alias g='git status'
-alias gl='git log --pretty=oneline --abbrev-commit --branches=* --graph --decorate'
-alias ga='git add .'
-alias gc='git commit -vam'
-alias gpl='git pull'
-alias gp='git push'
-alias gsa='git submodule add'
-
-#===============================
-
-# Functions 
-#------------------
-function ccd {
-	mkdir -p $1
-	cd $1
-}
-
-function gs {
-	cd $1
-	ls
-}
-#===============================
+alias gl='git log --graph --pretty=format:"%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset" --abbrev-commit'

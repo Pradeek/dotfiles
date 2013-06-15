@@ -1,22 +1,28 @@
-export PATH=$PATH:~/bin # Add ~/bin to $PATH for custom programs
+# Standard env
+export LESS="-iMFXR" # ignore case, long prompt, exit if it fits on one screen, allow colors for ls and grep colors
+export MANPAGER="less -X" # Don’t clear the screen after quitting a manual page
 
-export PATH=$PATH:~/bin/mongodb # Add mongodb to $PATH
+export EDITOR='vim'
 
-ln -s ~/Sublime\ Text\ 2/sublime_text ~/bin/subl # Add a symbolic link to Sublime Text 2
+eval "$(rbenv init -)"
 
-# Add bash completion
-if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
-    . /etc/bash_completion
-fi
+function vcs_status() {
+   vcprompt --format="[%s:%b]%m%a%u" -A "!" -M "!"
+}
 
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm" # Load RVM function
+# Go crazy
+function on_prompt() {
+    left="\[${CYAN}\]\u\[${NORMAL}\] at \[${YELLOW}\]\h\[${NORMAL}\] in \[${RED}\]\w\[${NORMAL}\] "
+    vc_info="\[${GREEN}\]$(vcs_status)"
+    right="\[${MAGENTA}\] \t\n"
 
-set -o vi # use vi key bindings
+    PS2="\[${GREEN}\]\[${BOLD}\]\$>\[${NORMAL}\] "
 
-. ~/nvm/nvm.sh
+    left_clean="$(sed -E 's:\\\[([^\\]|\\[^]])*\\\]::g' <<< $left)" 
+    right_clean="$(sed -E 's:\\\[([^\\]|\\[^]])*\\\]::g' <<< $right)"
+    vc_info_clean="$(sed -E 's:\\\[([^\\]|\\[^]])*\\\]::g' <<< $vc_info)"
 
-
-rvm use 1.9.3
-nvm use v0.8.11
-
-clear
+    spaces="$(( $(tput cols) - ${#left_clean} - ${#PWD} - ${#right_clean} - ${#vc_info_clean}))"
+    PS1="$(printf "%s%s%${spaces}s%s" "${left}" "${vc_info}" "${right}" "${PS2}")"
+}
+export PROMPT_COMMAND=on_prompt

@@ -1,0 +1,12 @@
+alias ls='ls -G'
+alias vim='mvim -v'
+
+alias resetdns='sudo killall -HUP mDNSResponder'
+
+alias mail='open -a Mail.app'
+
+# Source bash completion
+if [ -f $(brew --prefix)/etc/bash_completion ]; then
+  . $(brew --prefix)/etc/bash_completion
+  . $(brew --prefix)/etc/bash_completion.d/vagrant
+fi
