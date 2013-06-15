@@ -2,12 +2,12 @@
 BASEDIR=$(dirname $0)
 
 echo "Taking backup of existing files"
-if [! -f ~/.bashrc.old ]; then
+if [ ! -f ~/.bashrc.old ]; then
   mv ~/.bashrc ~/.bashrc.old
 else
   echo "Backup for .bashrc already exists"
 fi
-if [! -f ~/.inputrc.old ]; then
+if [ ! -f ~/.inputrc.old ]; then
   mv ~/.inputrc ~/.inputrc.old
 else
   echo "Backup for .inputrc already exists"
