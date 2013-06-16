@@ -5,6 +5,10 @@ alias resetdns='sudo killall -HUP mDNSResponder'
 
 alias mail='open -a Mail.app'
 
+function cdf() { # short for `cdfinder`
+  cd "$(osascript -e 'tell app "Finder" to POSIX path of (insertion location as alias)')"
+}
+
 # Source bash completion
 if [ -f $(brew --prefix)/etc/bash_completion ]; then
   . $(brew --prefix)/etc/bash_completion

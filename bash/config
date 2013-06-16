@@ -4,6 +4,7 @@ shopt -s dotglob # Include '.' files in file name expansions
 shopt -s extglob # Enable pattern matching using ?, *, [...]
 shopt -s nocaseglob # Case insensitive filename expansion
 shopt -s checkwinsize # Check window size after each command and updates lines and columns if necessary
+shopt -s autocd # `**/qux` will enter `./foo/bar/baz/qux`
 
 # History management
 export HISTSIZE=1000000

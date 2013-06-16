@@ -1,10 +1,12 @@
-echo "Removing current files"
-rm ~/.inputrc
-rm ~/.bashrc
+files=( "bashrc" "inputrc" "vimrc" )
 
-if [ -f ~/.bashrc.old ]; then
-  echo "Restoring .bashrc from .bashrc.old"
-  mv ~/.bashrc.old ~/.bashrc
-fi
+for file in "${files[@]}"
+do
+  echo "Removing current $file"
+  rm ~/.$file
 
-echo "Done :)"
+  if [ -f ~/.$file.old ]; then
+    echo "Restoring .$file from .$file.old"
+    mv ~/.$file.old ~/.$file
+  fi
+done

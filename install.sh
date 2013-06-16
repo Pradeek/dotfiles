@@ -1,20 +1,22 @@
 #! /usr/bin/env bash
 BASEDIR=$(dirname $0)
 
+files=( "bashrc" "inputrc" "vimrc" )
+
 echo "Taking backup of existing files"
-if [ ! -f ~/.bashrc.old ]; then
-  mv ~/.bashrc ~/.bashrc.old
-else
-  echo "Backup for .bashrc already exists"
-fi
-if [ ! -f ~/.inputrc.old ]; then
-  mv ~/.inputrc ~/.inputrc.old
-else
-  echo "Backup for .inputrc already exists"
-fi
+for file in "${files[@]}"
+do
+  if [ ! -f ~/.$file.old ]; then
+    mv ~/.$file ~/.$file.old
+  else
+    echo "Backup for .$file already exists"
+  fi  
+done
 
 echo "Setting up dotfiles"
-ln -s $BASEDIR/bashrc ~/.bashrc
-ln -s $BASEDIR/inputrc ~/.inputrc
+for file in "${files[@]}"
+do
+  ln -s $BASEDIR/$file ~/.$file
+done
 
 echo "Done :)"
