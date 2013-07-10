@@ -1,22 +1,29 @@
-set nocompatible " Forget vi. 
+set nocompatible " Forget vi.
 filetype off
 
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 
 " let Vundle manage Vundle
-"  " required! 
 Bundle 'gmarik/vundle'
 
 Bundle 'ctrlp.vim'
+Bundle 'tComment'
+Bundle 'mileszs/ack.vim'
 Bundle 'Lokaltog/vim-powerline'
 Bundle 'scrooloose/syntastic'
 Bundle 'scrooloose/nerdtree'
 Bundle 'mattn/zencoding-vim'
 Bundle 'majutsushi/tagbar'
 Bundle 'Valloric/YouCompleteMe'
+Bundle 'travisjeffery/vim-gotosymbol'
 Bundle 'goldfeld/vim-seek'
+Bundle 'SirVer/ultisnips'
+Bundle 'Raimondi/delimitMate'
+Bundle 'terryma/vim-multiple-cursors'
+Bundle 'marijnh/tern_for_vim'
 
+Bundle 'jelera/vim-javascript-syntax'
 Bundle 'nono/vim-handlebars'
 
 " Powerline setup. 
@@ -64,7 +71,7 @@ set wildmenu " Better command-line completion
 set wildmode=full " Auto-complete menu
 
 set splitright " Split window below/to the right
-set pastetoggle=<F2>
+set pastetoggle=<leader>pp
 set linespace=1 " Sets linespace (px between lines)
 
 set clipboard=unnamed " Use the OS clipboard by default
@@ -80,7 +87,13 @@ inoremap <Up> <C-o>gk
 " Don't backup files.
 set nobackup
 set noswapfile
- 
+
+" Undo across sessions
+set undodir=~/.vim-undo
+set undofile
+set undolevels=1000 "max number of changes that can be undone
+set undoreload=10000 "max number lines to save for undo on buffer reload
+
 " Shows the current command
 set showcmd
  
@@ -105,16 +118,19 @@ vnoremap <F1> <ESC>
 " Map <leader>e to ESC in insert and visual mode
 imap <leader>e <ESC>
 vmap <leader>e <ESC>
+" Make jj do that as well
+imap jj <ESC>
+vmap jj <ESC>
+
+" Emacs key-binding in vim!
+imap <C-a> <C-o>0
+imap <C-e> <C-o>$
+nmap <C-e> $
+nmap <C-a> 0
 
 " Map <leader>n/p to go to next/previous buffer
 nmap <leader>n :bn<CR>
 nmap <leader>p :bp<CR>
- 
-" Customize navigation in splits
-nnoremap <C-h> <C-w>h
-nnoremap <C-j> <C-w>j
-nnoremap <C-k> <C-w>k
-nnoremap <C-l> <C-w>l
  
 " Make vim look pretty
 colorscheme desert
@@ -130,14 +146,22 @@ set guioptions-=T
 imap <leader>s <ESC> :w <CR>
 nmap <leader>s :w <CR>
 vmap <leader>s <ESC> :w <CR>
- 
+
+" Map <leader>s to save file
+imap <leader>q <ESC> :q <CR>
+nmap <leader>q :q <CR>
+vmap <leader>q <ESC> :q <CR>
+
+imap <leader>d <ESC> :bd <CR>
+nmap <leader>d <ESC> :bd <CR>
+
 " Bubble single lines
 nmap <C-Up> ddkP
 nmap <C-Down> ddp
 " Bubble multiple lines
 vmap <C-Up> xkP`[V`]
 vmap <C-Down> xp`[V`]
- 
+
 " Copy paste the normal way 
 nmap <C-V> "+gP
 vmap <C-X> "+x
@@ -154,9 +178,13 @@ set scrolloff=999
 " Yank(Copy) entire file
 nmap <leader>cc :%y+ <CR>
 
+" Fast switching between files
+nmap ,; <C-^>
+
 " Shortcuts for easier editing
 inoremap <leader>u <ESC>u
 inoremap <leader>w <ESC>bcw
+inoremap <leader>d <ESC>:bd
 
 " Better shortcuts for incrementing/decrementing numbers
 nnoremap + <C-a>
@@ -173,7 +201,6 @@ endif
 
 
 " Set shortcut for NERDTree
-inoremap <leader>nt :NERDTreeToggle <CR>
 nnoremap <leader>nt :NERDTreeToggle <CR>
 vnoremap <leader>nt :NERDTreeToggle <CR>
  
@@ -181,9 +208,6 @@ vnoremap <leader>nt :NERDTreeToggle <CR>
 " Changing expansion to Ctrl-e and enabling tag name completion
 let g:user_zen_expandabbr_key = '<c-e>'
 let g:use_zen_complete_tag = 1
-
-" TagBar view
-nmap <leader>t :TagbarToggle<CR>
 
 " Disable syntastic plugin for html files since it complains about templates
 " in script tags
@@ -213,8 +237,52 @@ let g:ycm_semantic_triggers =  {
   \   'cpp,objcpp' : ['->', '.', '::'],
   \   'perl' : ['->'],
   \   'php' : ['->', '::'],
-  \   'cs,java,vim,python,perl6,scala,vb,elixir,go' : ['.'],
+  \   'cs,java,vim,python,javascript,perl6,scala,vb,elixir,go' : ['.'],
   \   'ruby' : ['.', '::'],
   \   'lua' : ['.', ':'],
   \   'erlang' : [':'],
   \ }
+
+" Making Ultisnips work with Tab
+
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<tab>"
+
+function! g:UltiSnips_Complete()
+    call UltiSnips_ExpandSnippet()
+    if g:ulti_expand_res == 0
+        if pumvisible()
+            return "\<C-n>"
+        else
+            call UltiSnips_JumpForwards()
+            if g:ulti_jump_forwards_res == 0
+               return "\<TAB>"
+            endif
+        endif
+    endif
+    return ""
+endfunction
+
+au BufEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-R>=g:UltiSnips_Complete()<cr>"
+
+" Key mapping for tComment
+imap <leader>c <ESC>gcc 
+nmap <leader>c <ESC>gcc 
+vmap <leader>c <ESC>gcc 
+
+imap <leader>cb <ESC>:TCommentBlock 
+nmap <leader>cb <ESC>:TCommentBlock
+vmap <leader>cb <ESC>:TCommentBlock
+
+
+" Mapping for GotoSymbol
+nmap <leader>t :GotoSymbol
+
+" tern for javascript config
+let g:tern_map_keys=1
+set completeopt-=preview " Don't open the goddamn scratch buffer everytime
+
+" Project specific vimrc - Should be at the end since it can overwrite
+" anything
+set exrc " enable per directory vimrc files
+set secure " disable unsafe commands in those files

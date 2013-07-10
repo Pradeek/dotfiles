@@ -6,9 +6,14 @@ export EDITOR='vim'
 
 eval "$(rbenv init -)"
 
+# Added z
+. ~/bin/z
+
 function vcs_status() {
    vcprompt --format="[%s:%b]%m%a%u" -A "!" -M "!"
 }
+
+[[ -s $HOME/.tmuxinator/scripts/tmuxinator ]] && source $HOME/.tmuxinator/scripts/tmuxinator
 
 # Go crazy
 function on_prompt() {

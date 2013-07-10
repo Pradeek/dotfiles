@@ -1,7 +1,7 @@
 #! /usr/bin/env bash
 BASEDIR=$(dirname $0)
 
-files=( "bashrc" "inputrc" "vimrc" )
+files=( "bashrc" "inputrc" "vimrc" "tmux.conf" )
 
 echo "Taking backup of existing files"
 for file in "${files[@]}"

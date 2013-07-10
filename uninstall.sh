@@ -1,4 +1,4 @@
-files=( "bashrc" "inputrc" "vimrc" )
+files=( "bashrc" "inputrc" "vimrc" "tmux.conf" )
 
 for file in "${files[@]}"
 do

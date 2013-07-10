@@ -2,11 +2,19 @@ alias ls='ls -G'
 alias vim='mvim -v'
 
 alias resetdns='sudo killall -HUP mDNSResponder'
-
 alias mail='open -a Mail.app'
 
-function cdf() { # short for `cdfinder`
-  cd "$(osascript -e 'tell app "Finder" to POSIX path of (insertion location as alias)')"
+alias trash='ls ~/.Trash'
+alias emptytrash='rm -rf ~/.Trash/*'
+
+function cdf() {
+	cd $1
+	open -a Finder .
+}
+
+# Life saver
+function d() {
+	mv $1 ~/.Trash/
 }
 
 # Source bash completion

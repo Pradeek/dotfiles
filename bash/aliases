@@ -8,6 +8,9 @@ alias ..='cd ..'
 alias ...='cd ../../'
 alias -- -='cd -' # Go back to previous directory
 
+# Current directory name
+alias dir='echo ${PWD##*/}'
+
 alias tailf='tail -f'
 
 alias py="python"
@@ -28,3 +31,6 @@ alias st='hg st'
 
 # Git
 alias gl='git log --graph --pretty=format:"%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset" --abbrev-commit'
+
+# Vagrant
+alias recreate='vagrant destroy --force && vagrant up'
