@@ -150,6 +150,7 @@ set scrolloff=999
 " Clipboard settings
 set clipboard=unnamed " Use the OS clipboard by default
 set pastetoggle=<leader>pp
+nnoremap Y bv$hd
 
 " Set leader to , instead of \
 let mapleader=","
@@ -241,7 +242,7 @@ vnoremap <leader>d <ESC> :bd <CR>
 " Bubble single lines
 "nnoremap <C-k> ddkP
 nnoremap <C-j> ddp
- Bubble multiple lines
+" Bubble multiple lines
 vnoremap <C-k> xkP`[V`]
 vnoremap <C-j> xp`[V`]
 
@@ -446,4 +447,3 @@ let g:vimfiler_as_default_explorer = 1
 " Folder specific vimrc
 set exrc " enable per directory vimrc files
 set secure " disable unsafe commands in those files
-nnoremap ,de :execute '!ssh ubuntu@app1 "sudo SERVERADMIN_ROOT=/data/server-admin /data/code/_master_/delivery/hosted/scripts/prepare_revision.sh --out /data/hosted-releases --allow-uncommitted --force-overwrite && sudo service apache2 reload && cd /data/code/_master_/ && hg diff --git > ~/current_changes.diff" && osascript ~/bin/chrome-reload'<cr>
