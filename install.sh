@@ -1,7 +1,7 @@
 #! /usr/bin/env bash
 BASEDIR=$(dirname $0)
 
-files=( "bashrc" "inputrc" "vimrc" "tmux.conf" )
+files=( "bashrc" "inputrc" "vimrc" "gvimrc" "tmux.conf" )
 
 echo "Taking backup of existing files"
 for file in "${files[@]}"
@@ -10,7 +10,7 @@ do
     mv ~/.$file ~/.$file.old
   else
     echo "Backup for .$file already exists"
-  fi  
+  fi
 done
 
 echo "Setting up dotfiles"

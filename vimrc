@@ -1,125 +1,98 @@
+" Super standard stuff
 set nocompatible " Forget vi.
 filetype off
 
+" Set up Vundle
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
-
 " let Vundle manage Vundle
 Bundle 'gmarik/vundle'
 
+" Plugins
 " Window manager
 Bundle 'spolu/dwm.vim'
-
 " Undo management
 Bundle 'sjl/gundo.vim'
-
 " VCS
 Bundle 'Lawrencium'
 Bundle 'tpope/vim-fugitive'
-
 " Tmux integration
 Bundle 'benmills/vimux'
-
 " Make FocusLost work in vim -> tmux -> iTerm2
 Bundle 'sjl/vitality.vim'
-
 " Align stuff
 Bundle 'godlygeek/tabular'
-
 " Repeat plugin commands
 Bundle 'tpope/vim-repeat'
-
 " Add comments faster
 Bundle 'tpope/vim-commentary'
-
 " vimproc
 Bundle 'Shougo/vimproc.vim'
-
 " outline
 Bundle 'Shougo/unite-outline'
-
 " vimshell
 Bundle 'Shougo/vimshell.vim'
-
 " vimfiler
 Bundle 'Shougo/vimfiler.vim'
-
 " Unite.vim
 Bundle 'Shougo/unite.vim'
-
 " Unite-ssh
 Bundle 'Shougo/unite-ssh'
-
 " Bunch of color schemes
 Bundle 'Colour-Sampler-Pack'
 " Status bar
 Bundle 'bling/vim-airline'
-
 " Bindings for ack (using ag in the back)
 Bundle 'mileszs/ack.vim'
-
 " Syntax checker
 Bundle 'scrooloose/syntastic'
-
 " File explorer
 Bundle 'scrooloose/nerdtree'
-
 " Zencoding for HTML
 Bundle 'mattn/zencoding-vim'
-
 " Tagbar / Autocomplete / Go to symbol
 Bundle 'majutsushi/tagbar'
 Bundle 'Valloric/YouCompleteMe'
 Bundle 'travisjeffery/vim-gotosymbol'
-
 " Go to character
 Bundle 'goldfeld/vim-seek'
-
 " Change surrounding text
 Bundle 'tpope/vim-surround'
-
 " Snippets
 Bundle 'SirVer/ultisnips'
-
 " Adds closing tags automatically
 Bundle 'Raimondi/delimitMate'
-
 " Allows selection of multiple occurances of a patterns for faster changes
 Bundle 'terryma/vim-multiple-cursors'
-
 " Javascript intelligence
 Bundle 'marijnh/tern_for_vim'
-
 " Python awesomeness
 Bundle 'klen/python-mode'
-
 " Better syntax
 Bundle 'jelera/vim-javascript-syntax'
 Bundle 'django.vim'
 Bundle 'nono/vim-handlebars'
 
+" Status bar config
 " Powerline setup.
 set rtp+=~/.vim/bundle/powerline/powerline/bindings/vim
 set laststatus=2 " Always display status line in all windows
 set noshowmode " Don't show the current mode at the bottom (since powerline does it)
-
 " Vim-airline setup
 let g:airline_powerline_fonts = 1
 let g:airline_theme='powerlineish'
 
+" General settings
 set  t_Co=256
 syntax enable
 syntax on
 filetype on
 filetype plugin indent on
-
 set background=light
 " Keep the buffer around when switching between buffers
 set hidden
-
 " Show line numbers
 set number
-
 " Basic editing stuff
 " set wrap " Wrap lines
 " set textwidth=80 " Cut down anything > 80 chars
@@ -132,41 +105,16 @@ set backspace=indent,eol,start " Allow backspace for everything in insert mode
 set autoindent " Auto indent everything
 set copyindent " Copy previous indentation on autoindenting
 set shiftround " Use multiple of shiftwidth when indenting with stuff like <
-
-" Search
-set showmatch " Show matching parenthesis
-set ignorecase " Ignore case when searching
-set smartcase " ignore case if search pattern is lowercase, case sensitive otherwise
-set hlsearch " Hightlight search terms
-" <leader>ll to clear highlighted text
-nnoremap <silent> <leader>ll :nohlsearch<CR>
-set incsearch " Show search matches as you type
-
-set history=1000 " More history!
-set undolevels=1000 " More undo levels!
-
-set title " Show title
-set ruler " Display cursor position in lower right corner
-set showcmd " Display the command in lower right corner
+set linespace=1 " Sets linespace (px between lines)
 set wildmenu " Better command-line completion
 set wildmode=full " Auto-complete menu
-
-set splitright " Split window below/to the right
-set pastetoggle=<leader>pp
-set linespace=1 " Sets linespace (px between lines)
-
-set clipboard=unnamed " Use the OS clipboard by default
-
-set foldmethod=indent " Fold based on indentation
-set foldnestmax=1 " Don't go crazy
-set nofoldenable " I don't remember asking you to fold a goddamn thing
-
-" Make cursor to always stay in the middle of the window
-set scrolloff=999
-
 " Make cursor move as expected with wrapped lines
 inoremap <Down> <C-o>gj
 inoremap <Up> <C-o>gk
+" Automatically save files when i switch buffers
+set autowrite
+" Enable mouse in normal mode
+set mouse=n
 
 " Don't backup files.
 set nobackup
@@ -178,17 +126,33 @@ set undofile
 set undolevels=1000 "max number of changes that can be undone
 set undoreload=10000 "max number lines to save for undo on buffer reload
 
+" Search
+set showmatch " Show matching parenthesis
+set ignorecase " Ignore case when searching
+set smartcase " ignore case if search pattern is lowercase, case sensitive otherwise
+set hlsearch " Hightlight search terms
+" <leader>ll to clear highlighted text
+nnoremap <silent> <leader>ll :nohlsearch<CR>
+set incsearch " Show search matches as you type
+
+" History
+set history=1000 " More history!
+set undolevels=1000 " More undo levels!
+
+" Window settings
+set title " Show title
+set ruler " Display cursor position in lower right corner
+set showcmd " Display the command in lower right corner
+set splitright " Split window below/to the right
+" Make cursor to always stay in the middle of the window
+set scrolloff=999
+
+" Clipboard settings
+set clipboard=unnamed " Use the OS clipboard by default
+set pastetoggle=<leader>pp
+
 " Set leader to , instead of \
 let mapleader=","
-
-" Quick edit for the vimrc files
-nmap <silent> <leader>ev :e $MYVIMRC<CR>
-
-" Automatically save files when i switch buffers
-set autowrite
-
-" Enable mouse in normal mode
-set mouse=n
 
 " Annoyances
 command! -bang -range=% -complete=file -nargs=* W <line1>,<line2>write<bang> <args>
@@ -205,22 +169,35 @@ endfunction
 " Load all auto commands only once
 if !exists("autocommands_loaded")
     let autocommands_loaded = 1
-
     " Automatically reload .vimrc on save
     autocmd BufWritePost .vimrc source %
-
     " Save when you lose focus (don't warn about unsaved files)
     autocmd FocusLost * silent! wa
-
     " Treat .json files as .js
     autocmd BufNewFile,BufRead *.json setfiletype json syntax=javascript
-
     " Trim trialing whitespace always
     autocmd BufWrite * :call TrimTrailingWhitespace()
-
     " Jump to the last position when reopening a file
     autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 endif
+
+" vimrc shortcut and fold expression
+nmap <silent> <leader>ev :e $MYVIMRC<CR>
+autocmd FileType vim call s:vimrc_settings()
+function! s:vimrc_settings()
+    setlocal foldmethod=expr
+    setlocal foldexpr=GetVimScriptFold(v:lnum)
+    function! GetVimScriptFold(line_number)
+        let current_line = getline(a:line_number)
+        if current_line =~? '\v^\"'
+            return '1'
+        elseif current_line =~? '\v^\s*$'
+            return '0'
+        else
+            return 1
+        endif
+    endfunction
+endfunction
 
 " indent and keep selection so that I can do it again
 vnoremap < <gv
@@ -249,27 +226,22 @@ nnoremap ,; <C-^>
 " Make vim look pretty
 colorscheme desert
 
-set guifont=Droid\ Sans\ Mono\ For\ Powerline:h14
-set guioptions-=m
-set guioptions-=T
-
-" Using noremap for the 3 mappings below screws up insert mode
-
+" Convinent save/delete
+" Using noremap for the mappings below screws up insert mode
 " Map <leader>s to save file
 inoremap <leader>s <ESC> :w <CR>
 nnoremap <leader>s <ESC> :w <CR>
 vnoremap <leader>s <ESC> :w <CR>
-
 " Map <leader>d to delete the buffer
 inoremap <leader>d <ESC> :bd <CR>
 nnoremap <leader>d <ESC> :bd <CR>
 vnoremap <leader>d <ESC> :bd <CR>
 
+" Bubble text
 " Bubble single lines
-nnoremap <C-k> ddkP
+"nnoremap <C-k> ddkP
 nnoremap <C-j> ddp
-
-" Bubble multiple lines
+ Bubble multiple lines
 vnoremap <C-k> xkP`[V`]
 vnoremap <C-j> xp`[V`]
 
@@ -297,27 +269,23 @@ nnoremap <leader>h2 yyp^v$r-
 
 " Remote file editing goodness
 if !exists("g:remote_edit_session_host")
-let g:remote_edit_session_host = ''
+    let g:remote_edit_session_host = ''
 endif
-
 function! RemoteEditOpen(host)
-let g:remote_edit_session_host = a:host
-echo 'Opening ssh session to ' . a:host
-silent execute '!ssh -f -N ' . a:host | redraw!
-echo 'Opened ssh session to ' . a:host
-echo 'Do not forget to call RemoteEditEnd once you are done'
+    let g:remote_edit_session_host = a:host
+    echo 'Opening ssh session to ' . a:host
+    silent execute '!ssh -f -N ' . a:host | redraw!
+    echo 'Opened ssh session to ' . a:host
+    echo 'Do not forget to call RemoteEditEnd once you are done'
 endfunction
-
 function! RemoteEditClose()
-silent execute '!ps -ef | grep ' . g:remote_edit_session_host . ' | grep -v grep | awk ' . "'{print $2'}" .' | xargs kill -9' | redraw!
-echo 'Closed connection to ' . g:remote_edit_session_host
-let g:remote_edit_session_host = ''
+    silent execute '!ps -ef | grep ' . g:remote_edit_session_host . ' | grep -v grep | awk ' . "'{print $2'}" .' | xargs kill -9' | redraw!
+    echo 'Closed connection to ' . g:remote_edit_session_host
+    let g:remote_edit_session_host = ''
 endfunction
-
 command! -nargs=1 RemoteEdit call RemoteEditOpen("<args>")
 command! RemoteEditEnd call RemoteEditClose()
 
-" Plugins
 " Vimux
 nnoremap <leader>r :VimuxPromptCommand <CR>
 nnoremap <leader>r. :VimuxRunLastCommand <CR>
@@ -332,7 +300,7 @@ nnoremap <leader>u :GundoToggle <CR>
 " Tabular mappings
 let mapleader=','
 
-let mapleader=','
+" Tabularize
 if exists(":Tabularize")
   nnoremap <Leader>a= :Tabularize /=<CR>
   vnoremap <Leader>a= :Tabularize /=<CR>
@@ -378,10 +346,8 @@ let g:ycm_semantic_triggers =  {
 \ }
 
 " Making Ultisnips work with Tab
-
 let g:UltiSnipsExpandTrigger="<tab>"
 let g:UltiSnipsJumpForwardTrigger="<tab>"
-
 function! g:UltiSnips_Complete()
 call UltiSnips_ExpandSnippet()
 if g:ulti_expand_res == 0
@@ -396,7 +362,6 @@ endif
 endif
 return ""
 endfunction
-
 autocmd BufEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-R>=g:UltiSnips_Complete()<cr>"
 
 " Mapping for GotoSymbol
@@ -434,16 +399,13 @@ nnoremap <leader>W :wincmd W<CR>
 let g:dwm_master_pane_width=120
 
 " Unite.vim
-
 " Always go to insert mode
 let g:unite_enable_start_insert = 1
 " Yank history
 let g:unite_source_history_yank_enable = 1
-
 " Use ag for search.
 let g:unite_source_grep_command="ag"
 let g:unite_source_grep_default_opts="-i --nocolor --nogroup"
-
 " Fancy prompts
 let g:unite_prompt = '» '
 " Fuzzy search ALL THE THINGS!
@@ -462,7 +424,6 @@ nnoremap <leader>y :Unite -no-split -buffer-name=yank history/yank<cr>
 nnoremap <leader>cd :<C-u>Unite -no-split directory_mru directory_rec:. -start-insert -buffer-name=cd -default-action=cd<CR>
 " Super search
 nnoremap <leader>g :Unite -buffer-name=search -start-insert grep:.<cr>
-
 " Custom mappings for the unite buffer
 autocmd FileType unite call s:unite_settings()
 function! s:unite_settings()
@@ -470,14 +431,11 @@ function! s:unite_settings()
   " Do the right thing on ESC
   nmap <buffer> <nowait> q <Plug>(unite_exit)
   imap <buffer> <nowait> q <Plug>(unite_exit)
-
   " <Tab> to go to next line
   imap <buffer> <TAB>   <Plug>(unite_select_next_line)
-
   " refresh the cache
   nmap <buffer> <nowait> <F5>  <Plug>(unite_redraw)
   imap <buffer> <nowait> <F5>  <Plug>(unite_redraw)
-
   " change directories in unite
   nmap <buffer> <nowait> <leader>cd <Plug>(unite_restart)
 endfunction
@@ -485,11 +443,7 @@ endfunction
 " vimfiler
 let g:vimfiler_as_default_explorer = 1
 
-" anything
+" Folder specific vimrc
 set exrc " enable per directory vimrc files
 set secure " disable unsafe commands in those files
-
-" temp mapping
-nnoremap <leader>re :e scp://ubuntu@app1//data/code/_master_/
-" autocmd! BufWritePost * silent! execute '!ssh ubuntu@app1 "sudo SERVERADMIN_ROOT=/data/server-admin /data/code/_master_/delivery/hosted/scripts/prepare_revision.sh --out /data/hosted-releases --allow-uncommitted --force-overwrite && sudo service apache2 reload && cd /data/code/_master_/ && hg diff --git > ~/current_changes.diff" && osascript ~/bin/chrome-reload'
 nnoremap ,de :execute '!ssh ubuntu@app1 "sudo SERVERADMIN_ROOT=/data/server-admin /data/code/_master_/delivery/hosted/scripts/prepare_revision.sh --out /data/hosted-releases --allow-uncommitted --force-overwrite && sudo service apache2 reload && cd /data/code/_master_/ && hg diff --git > ~/current_changes.diff" && osascript ~/bin/chrome-reload'<cr>
