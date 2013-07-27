@@ -2,6 +2,9 @@
 
 ## Third party tools 
 
+### [t](https://github.com/sjl/t)
+A simple CLI todo list
+
 ### [ffind](https://github.com/jaimebuelta/ffind) 
 A saner find replacement. 
 
@@ -16,6 +19,12 @@ Awesome directory jumper
 
 ### [tmuxinator](https://github.com/aziz/tmuxinator)
 Easy tmux configs
+
+### [the-silver-searcher](https://github.com/ggreer/the_silver_searcher)
+Faster than ack
+
+### [httpie](https://github.com/jkbr/httpie)
+Sane CLI for HTTP
 
 ## Setup
 

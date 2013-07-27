@@ -10,7 +10,7 @@ alias -- -='cd -' # Go back to previous directory
 
 # Current directory name
 alias dir='echo ${PWD##*/}'
-
+alias kill='kill -9'
 alias tailf='tail -f'
 
 alias py="python"
@@ -34,3 +34,6 @@ alias gl='git log --graph --pretty=format:"%Cred%h%Creset -%C(yellow)%d%Creset %
 
 # Vagrant
 alias recreate='vagrant destroy --force && vagrant up'
+
+# t
+alias t='python ~/extras/t/t.py --task-dir /Users/pradeek/Dropbox/Tasks --list general'
