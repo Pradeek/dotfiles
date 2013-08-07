@@ -16,6 +16,8 @@ Bundle 'sjl/gundo.vim'
 " VCS
 Bundle 'Lawrencium'
 Bundle 'tpope/vim-fugitive'
+" Terminal/iTerm integration (Macvim)
+Bundle 'gcmt/tube.vim'
 " Tmux integration
 Bundle 'benmills/vimux'
 " Make FocusLost work in vim -> tmux -> iTerm2
@@ -69,6 +71,7 @@ Bundle 'marijnh/tern_for_vim'
 " Python awesomeness
 Bundle 'klen/python-mode'
 " Better syntax
+Bundle 'plasticboy/vim-markdown'
 Bundle 'jelera/vim-javascript-syntax'
 Bundle 'django.vim'
 Bundle 'nono/vim-handlebars'
@@ -97,6 +100,7 @@ set number
 " set wrap " Wrap lines
 " set textwidth=80 " Cut down anything > 80 chars
 " Wrapping is being really annoying.
+set virtualedit=block
 set nowrap
 set tabstop=4 " Set tab as 4 spaces
 set shiftwidth=4 " No of spaces for autoindent
@@ -108,6 +112,7 @@ set shiftround " Use multiple of shiftwidth when indenting with stuff like <
 set linespace=1 " Sets linespace (px between lines)
 set wildmenu " Better command-line completion
 set wildmode=full " Auto-complete menu
+set nofoldenable " I don't remember asking you to fold a goddamn thing
 " Make cursor move as expected with wrapped lines
 inoremap <Down> <C-o>gj
 inoremap <Up> <C-o>gk
@@ -132,7 +137,7 @@ set ignorecase " Ignore case when searching
 set smartcase " ignore case if search pattern is lowercase, case sensitive otherwise
 set hlsearch " Hightlight search terms
 " <leader>ll to clear highlighted text
-nnoremap <silent> <leader>ll :nohlsearch<CR>
+noremap <silent><Leader><leader> :nohlsearch<CR>
 set incsearch " Show search matches as you type
 
 " History
@@ -147,15 +152,21 @@ set splitright " Split window below/to the right
 " Make cursor to always stay in the middle of the window
 set scrolloff=999
 
-" Clipboard settings
+" Navigation across splits
+nnoremap <C-w><C-h> <C-h>
+nnoremap <C-w><C-j> <C-j>
+nnoremap <C-w><C-k> <C-k>
+nnoremap <C-w><C-l> <C-l>
+
+" Copy/Paste settings
 set clipboard=unnamed " Use the OS clipboard by default
 set pastetoggle=<leader>pp
 nnoremap Y bv$hd
 
-" Set leader to , instead of \
 let mapleader=","
 
 " Annoyances
+" Set leader to , instead of \
 command! -bang -range=% -complete=file -nargs=* W <line1>,<line2>write<bang> <args>
 command! -bang -range=% -complete=file -nargs=* E <line1>,<line2>write<bang> <args>
 command! -bang Q quit<bang>
@@ -186,6 +197,7 @@ endif
 nmap <silent> <leader>ev :e $MYVIMRC<CR>
 autocmd FileType vim call s:vimrc_settings()
 function! s:vimrc_settings()
+    setlocal foldenable
     setlocal foldmethod=expr
     setlocal foldexpr=GetVimScriptFold(v:lnum)
     function! GetVimScriptFold(line_number)
@@ -200,6 +212,15 @@ function! s:vimrc_settings()
     endfunction
 endfunction
 
+" Folding for HTML
+" TODO: Make this togglable
+" Vatzf = Select around tag and fold
+autocmd FileType html call s:HtmlSettings()
+autocmd FileType htmldjango call s:HtmlSettings()
+function! s:HtmlSettings()
+    nnoremap <space> Vatzf
+endfunction
+
 " indent and keep selection so that I can do it again
 vnoremap < <gv
 vnoremap > >gv
@@ -208,8 +229,12 @@ vnoremap > >gv
 inoremap <leader>o <ESC>O
 nnoremap <leader>o <ESC>O
 
-" Map jj to ESC key in insert mode
-inoremap jj <ESC>
+" Map ; to :
+nnoremap ; :
+
+" Map jk/kj to ESC key in insert mode
+inoremap jk <ESC>
+inoremap kj <ESC>
 
 " Map <leader>e to ESC in insert and visual mode
 inoremap <leader>e <ESC>
@@ -378,13 +403,16 @@ let g:ackprg = 'ag --nogroup --nocolor --column'
 " Vim python-mode
 autocmd FileType python call s:python_mode_settings()
 function! s:python_mode_settings()
+    setlocal wrap
+    let g:pymode_doc = 0
+    let g:pymode_run = 0
     let g:pymode_lint_write = 0
     let g:pymode_lint = 0
     let g:pymode_rope = 1
     let g:pymode_rope_enable_autoimport = 0
-    let g:pymode_folding = 1
+    let g:pymode_folding = 0
     let g:pymode_motion = 1
-    nnoremap <leader>gd :call RopeGotoDefinition()<CR>
+    nnoremap <leader>gf :call RopeGotoDefinition()<CR>
 endfunction
 
 " DWM.vim

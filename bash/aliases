@@ -1,6 +1,7 @@
 # General aliases
 alias ls='ls --color=auto'
 alias sl=ls
+alias la='ls -a'
 alias ll='ls -al'
 alias c='clear'
 alias q='exit'
@@ -24,7 +25,7 @@ alias ipaddr="ifconfig | grep broadcast | grep inet | cut -d ' ' -f 2"
 alias webserver='python -m SimpleHTTPServer'
 
 # Mercurial
-alias diff='hg diff --git'
+alias diff='hg diff --git -wBb'
 alias import='hg import --no-commit'
 alias undo='hg revert --all'
 alias st='hg st'

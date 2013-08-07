@@ -16,18 +16,10 @@ function vcs_status() {
 [[ -s $HOME/.tmuxinator/scripts/tmuxinator ]] && source $HOME/.tmuxinator/scripts/tmuxinator
 
 # Go crazy
+PS2="\[${GREEN}\]\[${BOLD}\]\$>\[${NORMAL}\] "
 function on_prompt() {
     left="\[${CYAN}\]\u\[${NORMAL}\] at \[${YELLOW}\]\h\[${NORMAL}\] in \[${RED}\]\w\[${NORMAL}\] "
     vc_info="\[${GREEN}\]$(vcs_status)"
-    right="\[${MAGENTA}\] \t\n"
-
-    PS2="\[${GREEN}\]\[${BOLD}\]\$>\[${NORMAL}\] "
-
-    left_clean="$(sed -E 's:\\\[([^\\]|\\[^]])*\\\]::g' <<< $left)" 
-    right_clean="$(sed -E 's:\\\[([^\\]|\\[^]])*\\\]::g' <<< $right)"
-    vc_info_clean="$(sed -E 's:\\\[([^\\]|\\[^]])*\\\]::g' <<< $vc_info)"
-
-    spaces="$(( $(tput cols) - ${#left_clean} - ${#PWD} - ${#right_clean} - ${#vc_info_clean}))"
-    PS1="$(printf "%s%s%${spaces}s%s" "${left}" "${vc_info}" "${right}" "${PS2}")"
+    PS1="$(printf "%s%s\n%s" "${left}" "${vc_info}" "${PS2}")"
 }
 export PROMPT_COMMAND=on_prompt
