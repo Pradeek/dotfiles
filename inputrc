@@ -1,8 +1,11 @@
+# vi-mode
+set -o vi
+
 # Case insensitive completion
-set completion-ignore-case on 
+set completion-ignore-case on
 
 # Remember cursor position of previous commands
-set history-preserve-point on 
+set history-preserve-point on
 
 # List all matches in case multiple possible completions are possible
 set show-all-if-ambiguous on

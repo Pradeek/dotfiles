@@ -29,6 +29,12 @@ Sane CLI for HTTP
 ### [autoenv](https://github.com/kennethreitz/autoenv)
 Folder specific ENV
 
+### [pyp](https://code.google.com/p/pyp/)
+Python replacement for awk/sed/etc.
+
+### [mitmproxy](http://mitmproxy.org/doc/mitmproxy.html)
+Inspect network traffic
+
 ## Setup
 
 1. Clone this repo to your home directory.

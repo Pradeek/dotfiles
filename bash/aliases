@@ -5,6 +5,7 @@ alias la='ls -a'
 alias ll='ls -al'
 alias c='clear'
 alias q='exit'
+alias v='vim'
 alias ..='cd ..'
 alias ...='cd ../../'
 alias -- -='cd -' # Go back to previous directory
@@ -14,7 +15,7 @@ alias dir='echo ${PWD##*/}'
 alias kill='kill -9'
 alias tailf='tail -f'
 
-alias py="python"
+alias py="ipython"
 
 alias refresh='source ~/.bashrc && clear'
 alias reload='source ~/.bashrc && clear'
@@ -38,3 +39,8 @@ alias recreate='vagrant destroy --force && vagrant up'
 
 # t
 alias t='python ~/extras/t/t.py --task-dir /Users/pradeek/Dropbox/Tasks --list general'
+
+# Fix common typos
+alias exot='exit'
+alias cim='vim'
+alias vom='vim'

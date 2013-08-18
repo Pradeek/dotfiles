@@ -16,6 +16,7 @@ Bundle 'sjl/gundo.vim'
 " VCS
 Bundle 'Lawrencium'
 Bundle 'tpope/vim-fugitive'
+Bundle 'safetydank/vim-gitgutter'
 " Terminal/iTerm integration (Macvim)
 Bundle 'gcmt/tube.vim'
 " Tmux integration
@@ -91,7 +92,6 @@ syntax enable
 syntax on
 filetype on
 filetype plugin indent on
-set background=light
 " Keep the buffer around when switching between buffers
 set hidden
 " Show line numbers
@@ -99,9 +99,8 @@ set number
 " Basic editing stuff
 " set wrap " Wrap lines
 " set textwidth=80 " Cut down anything > 80 chars
-" Wrapping is being really annoying.
-set virtualedit=block
 set nowrap
+set virtualedit=block
 set tabstop=4 " Set tab as 4 spaces
 set shiftwidth=4 " No of spaces for autoindent
 set expandtab " Expand tabs to spaces
@@ -137,7 +136,7 @@ set ignorecase " Ignore case when searching
 set smartcase " ignore case if search pattern is lowercase, case sensitive otherwise
 set hlsearch " Hightlight search terms
 " <leader>ll to clear highlighted text
-noremap <silent><Leader><leader> :nohlsearch<CR>
+noremap scls :set nohlsearch<CR>
 set incsearch " Show search matches as you type
 
 " History
@@ -327,12 +326,10 @@ nnoremap <leader>u :GundoToggle <CR>
 let mapleader=','
 
 " Tabularize
-if exists(":Tabularize")
-  nnoremap <Leader>a= :Tabularize /=<CR>
-  vnoremap <Leader>a= :Tabularize /=<CR>
-  nnoremap <Leader>a: :Tabularize /:\zs<CR>
-  vnoremap <Leader>a: :Tabularize /:\zs<CR>
-endif
+nnoremap <Leader>a= :Tabularize /=<CR>
+vnoremap <Leader>a= :Tabularize /=<CR>
+nnoremap <Leader>a: :Tabularize /:\zs<CR>
+vnoremap <Leader>a: :Tabularize /:\zs<CR>
 
 " Zencoding plugin options
 " Changing expansion to Ctrl-e and enabling tag name completion
@@ -404,10 +401,11 @@ let g:ackprg = 'ag --nogroup --nocolor --column'
 autocmd FileType python call s:python_mode_settings()
 function! s:python_mode_settings()
     setlocal wrap
+    let g:pymode_lint_checker = "pyflakes,pep8"
     let g:pymode_doc = 0
     let g:pymode_run = 0
-    let g:pymode_lint_write = 0
-    let g:pymode_lint = 0
+    let g:pymode_lint_write = 1
+    let g:pymode_lint = 1
     let g:pymode_rope = 1
     let g:pymode_rope_enable_autoimport = 0
     let g:pymode_folding = 0
