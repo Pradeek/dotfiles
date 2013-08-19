@@ -23,3 +23,5 @@ function on_prompt() {
     PS1="$(printf "%s%s\n%s" "${left}" "${vc_info}" "${PS2}")"
 }
 export PROMPT_COMMAND=on_prompt
+
+export PYTHONSTARTUP=~/bin/python_startup.py

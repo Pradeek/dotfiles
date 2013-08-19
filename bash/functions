@@ -1,5 +1,5 @@
 # do sudo, or sudo the last command if no argument given
-function s() { 
+function s() {
     if [[ $# == 0 ]]; then
         sudo $(history -p '!!')
     else
@@ -20,7 +20,7 @@ function compress() {
             tgz)   	tar czvf $2.tar.gz  $2      ;;
             tar)  	tar cpvf $2.tar  $2         ;;
             bz2)	bzip $2             ;;
-            gz)		gzip -c -9 -n $2 > $2.gz    ;;	
+            gz)		gzip -c -9 -n $2 > $2.gz    ;;
             zip)   	zip -r $2.zip $2    ;;
             7z)    	7z a $2.7z $2               ;;
             *)     	echo "'$1' cannot be packed via pk()" ;;
@@ -59,3 +59,40 @@ function tree () {
       find $@ -print | sed -e 's;[^/]*/;|____;g;s;____|; |;g'
     fi
 }
+
+export MARKPATH=$HOME/.marks
+function jump {
+    cd -P "$MARKPATH/$1" 2>/dev/null || echo "No such mark: $1"
+}
+function mark {
+    mkdir -p "$MARKPATH"; ln -s "$(pwd)" "$MARKPATH/$1"
+}
+function unmark {
+    rm -i "$MARKPATH/$1"
+}
+function marks {
+    \ls -l "$MARKPATH" | tail -n +2 | sed 's/  / /g' | cut -d' ' -f9- | awk -F ' -> ' '{printf "%-10s -> %s\n", $1, $2}'
+}
+function m {
+    if [[ $# == 0 ]]; then
+        marks
+    else
+        mark $@
+    fi
+}
+function j {
+    if [[ $# == 0 ]]; then
+        marks
+    else
+        j $@
+    fi
+}
+
+function _jump {
+    local cur=${COMP_WORDS[COMP_CWORD]}
+    local marks=$(find $MARKPATH -type l | awk -F '/' '{print $NF}')
+    COMPREPLY=($(compgen -W '${marks[@]}' -- "$cur"))
+    return 0
+}
+complete -o default -o nospace -F _jump jump
+complete -o default -o nospace -F _jump j
