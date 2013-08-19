@@ -84,7 +84,7 @@ function j {
     if [[ $# == 0 ]]; then
         marks
     else
-        j $@
+        jump $@
     fi
 }
 

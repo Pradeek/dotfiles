@@ -16,7 +16,6 @@ Bundle 'sjl/gundo.vim'
 " VCS
 Bundle 'Lawrencium'
 Bundle 'tpope/vim-fugitive'
-Bundle 'safetydank/vim-gitgutter'
 " Terminal/iTerm integration (Macvim)
 Bundle 'gcmt/tube.vim'
 " Tmux integration
