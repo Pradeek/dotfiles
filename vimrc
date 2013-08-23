@@ -150,6 +150,11 @@ set splitright " Split window below/to the right
 " Make cursor to always stay in the middle of the window
 set scrolloff=999
 
+" Quickfix navigation
+nnoremap <leader>cc :cc<CR>
+nnoremap <leader>cn :cn<CR>
+nnoremap <leader>cp :cp<CR>
+
 " Navigation across splits
 nnoremap <C-w><C-h> <C-h>
 nnoremap <C-w><C-j> <C-j>
@@ -168,6 +173,7 @@ let mapleader=","
 command! -bang -range=% -complete=file -nargs=* W <line1>,<line2>write<bang> <args>
 command! -bang -range=% -complete=file -nargs=* E <line1>,<line2>write<bang> <args>
 command! -bang Q quit<bang>
+nnoremap <leader>c :bp\|bd #<CR>
 
 " Trim trailing spaces
 function! TrimTrailingWhitespace()
@@ -403,13 +409,14 @@ function! s:python_mode_settings()
     let g:pymode_lint_checker = "pyflakes,pep8"
     let g:pymode_doc = 0
     let g:pymode_run = 0
-    let g:pymode_lint_write = 1
-    let g:pymode_lint = 1
+    let g:pymode_lint_write = 0
+    let g:pymode_lint = 0
     let g:pymode_rope = 1
     let g:pymode_rope_enable_autoimport = 0
     let g:pymode_folding = 0
     let g:pymode_motion = 1
     nnoremap <leader>gf :call RopeGotoDefinition()<CR>
+    nnoremap <leader>cl :PyLint<CR>
 endfunction
 
 " DWM.vim
@@ -472,3 +479,8 @@ let g:vimfiler_as_default_explorer = 1
 " Folder specific vimrc
 set exrc " enable per directory vimrc files
 set secure " disable unsafe commands in those files
+
+" Timeout settings
+set ttimeout
+set ttimeoutlen=250
+set notimeout

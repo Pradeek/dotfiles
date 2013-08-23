@@ -3,6 +3,7 @@ alias vim='mvim -v'
 
 alias resetdns='sudo killall -HUP mDNSResponder'
 alias mail='open -a Mail.app'
+alias preview='open -a Preview.app'
 
 alias trash='ls ~/.Trash'
 alias emptytrash='rm -rf ~/.Trash/*'
