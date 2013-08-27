@@ -37,10 +37,14 @@ alias gl='git log --graph --pretty=format:"%Cred%h%Creset -%C(yellow)%d%Creset %
 # Vagrant
 alias recreate='vagrant destroy --force && vagrant up'
 
-# t
-alias t='python ~/extras/t/t.py --task-dir /Users/pradeek/Dropbox/Tasks --list general'
-
 # Fix common typos
 alias exot='exit'
 alias cim='vim'
 alias vom='vim'
+
+# Pretty print json
+alias json='python -mjson.tool'
+
+# Aliases for notes
+alias n='cd ~/Dropbox/Notes/ && ls'
+alias t='vim ~/Dropbox/Notes/todo.txt'

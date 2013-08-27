@@ -60,6 +60,28 @@ function tree () {
     fi
 }
 
+# switch mercurial branches
+function switch () {
+    if [[ $# == 0 ]]; then
+        hg up default
+        $PREVIOUS_BRANCH=$(cat .PREVIOUS_BRANCH)
+        hg up $PREVIOUS_BRANCH
+        if [[ $? != 0 ]]; then
+            hg branch $PREVIOUS_BRANCH
+        fi
+        hg import --no-commit .$PREVIOUS_BRANCH.diff
+    else
+        NEXT_BRANCH=$1
+        PREVIOUS_BRANCH=$(hg branch)
+        hg branch > .PREVIOUS_BRANCH
+        hg diff --git > .$PREVIOUS_BRANCH.diff
+        hg revert --all
+        hg up default
+        hg up $NEXT_BRANCH
+    fi
+}
+
+# Bash shortcuts
 export MARKPATH=$HOME/.marks
 function jump {
     cd -P "$MARKPATH/$1" 2>/dev/null || echo "No such mark: $1"
@@ -96,3 +118,4 @@ function _jump {
 }
 complete -o default -o nospace -F _jump jump
 complete -o default -o nospace -F _jump j
+
