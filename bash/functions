@@ -64,7 +64,7 @@ function tree () {
 function switch () {
     if [[ $# == 0 ]]; then
         hg up default
-        $PREVIOUS_BRANCH=$(cat .PREVIOUS_BRANCH)
+        PREVIOUS_BRANCH=$(cat .PREVIOUS_BRANCH)
         hg up $PREVIOUS_BRANCH
         if [[ $? != 0 ]]; then
             hg branch $PREVIOUS_BRANCH
