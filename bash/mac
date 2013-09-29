@@ -8,6 +8,8 @@ alias preview='open -a Preview.app'
 alias trash='ls ~/.Trash'
 alias emptytrash='rm -rf ~/.Trash/*'
 
+alias search='mdfind -name';
+
 function cdf() {
 	cd $1
 	open -a Finder .

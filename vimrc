@@ -11,6 +11,8 @@ Bundle 'gmarik/vundle'
 " Plugins
 " Window manager
 Bundle 'spolu/dwm.vim'
+" Split management
+Bundle 'roman/golden-ratio'
 " Undo management
 Bundle 'sjl/gundo.vim'
 " VCS
@@ -22,6 +24,8 @@ Bundle 'gcmt/tube.vim'
 Bundle 'benmills/vimux'
 " Make FocusLost work in vim -> tmux -> iTerm2
 Bundle 'sjl/vitality.vim'
+" Move between Vim and tmux splits seamlessly
+Bundle 'christoomey/vim-tmux-navigator'
 " Align stuff
 Bundle 'godlygeek/tabular'
 " Repeat plugin commands
@@ -51,12 +55,13 @@ Bundle 'scrooloose/syntastic'
 " File explorer
 Bundle 'scrooloose/nerdtree'
 " Zencoding for HTML
-Bundle 'mattn/zencoding-vim'
+Bundle 'mattn/emmet-vim'
 " Tagbar / Autocomplete / Go to symbol
 Bundle 'majutsushi/tagbar'
 Bundle 'Valloric/YouCompleteMe'
 Bundle 'travisjeffery/vim-gotosymbol'
 " Go to character
+Bundle 'svermeulen/vim-extended-ft'
 Bundle 'goldfeld/vim-seek'
 " Change surrounding text
 Bundle 'tpope/vim-surround'
@@ -68,8 +73,6 @@ Bundle 'Raimondi/delimitMate'
 Bundle 'terryma/vim-multiple-cursors'
 " Javascript intelligence
 Bundle 'marijnh/tern_for_vim'
-" Python awesomeness
-Bundle 'klen/python-mode'
 " Better syntax
 Bundle 'plasticboy/vim-markdown'
 Bundle 'jelera/vim-javascript-syntax'
@@ -84,6 +87,7 @@ set noshowmode " Don't show the current mode at the bottom (since powerline does
 " Vim-airline setup
 let g:airline_powerline_fonts = 1
 let g:airline_theme='powerlineish'
+let g:airline#extensions#tabline#enabled = 1
 
 " General settings
 set  t_Co=256
@@ -166,6 +170,9 @@ set clipboard=unnamed " Use the OS clipboard by default
 set pastetoggle=<leader>pp
 nnoremap Y bv$hd
 
+nnoremap <silent> <Tab> :bn<CR>
+nnoremap <silent> <S-Tab> :bp<CR>
+
 let mapleader=","
 
 " Annoyances
@@ -182,7 +189,10 @@ function! TrimTrailingWhitespace()
   execute"normal `z"
 endfunction
 
-" Load all auto commands only once
+" JSON formatting
+nnoremap <leader>js :%!python -m json.tool<CR>
+
+" Auto commands
 if !exists("autocommands_loaded")
     let autocommands_loaded = 1
     " Automatically reload .vimrc on save
@@ -192,7 +202,7 @@ if !exists("autocommands_loaded")
     " Treat .json files as .js
     autocmd BufNewFile,BufRead *.json setfiletype json syntax=javascript
     " Trim trialing whitespace always
-    autocmd BufWrite * :call TrimTrailingWhitespace()
+    " autocmd BufWrite * :call TrimTrailingWhitespace()
     " Jump to the last position when reopening a file
     autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 endif
@@ -336,11 +346,6 @@ vnoremap <Leader>a= :Tabularize /=<CR>
 nnoremap <Leader>a: :Tabularize /:\zs<CR>
 vnoremap <Leader>a: :Tabularize /:\zs<CR>
 
-" Zencoding plugin options
-" Changing expansion to Ctrl-e and enabling tag name completion
-let g:user_zen_expandabbr_key = '<c-e>'
-let g:use_zen_complete_tag = 1
-
 " Disable syntastic plugin for html files since it complains about templates
 " in script tags
 let g:syntastic_mode_map={ 'mode': 'active',
@@ -406,17 +411,7 @@ let g:ackprg = 'ag --nogroup --nocolor --column'
 autocmd FileType python call s:python_mode_settings()
 function! s:python_mode_settings()
     setlocal wrap
-    let g:pymode_lint_checker = "pyflakes,pep8"
-    let g:pymode_doc = 0
-    let g:pymode_run = 0
-    let g:pymode_lint_write = 0
-    let g:pymode_lint = 0
-    let g:pymode_rope = 1
-    let g:pymode_rope_enable_autoimport = 0
-    let g:pymode_folding = 0
-    let g:pymode_motion = 1
-    nnoremap <leader>gf :call RopeGotoDefinition()<CR>
-    nnoremap <leader>cl :PyLint<CR>
+    nnoremap <leader>br iimport pdb; pdb.set_trace()<CR>
 endfunction
 
 " DWM.vim
@@ -425,8 +420,8 @@ nnoremap <silent> <leader>q :exec DWM_Close()<CR>
 " The two commands below screw up arrow keys in normal mode
 " nnoremap <silent> <C-]> :call DWM_GrowMaster()<CR>
 " nnoremap <silent> <C-[> :call DWM_ShrinkMaster()<CR>
-nnoremap <silent> <Tab> :call DWM_Rotate(0)<CR>
-nnoremap <silent> <S-Tab> :call DWM_Rotate(1)<CR>
+" nnoremap <silent> <Tab> :call DWM_Rotate(0)<CR>
+" nnoremap <silent> <S-Tab> :call DWM_Rotate(1)<CR>
 nnoremap <leader>w :wincmd w<CR>
 nnoremap <leader>W :wincmd W<CR>
 let g:dwm_master_pane_width=120
@@ -444,11 +439,11 @@ let g:unite_prompt = '» '
 " Fuzzy search ALL THE THINGS!
 call unite#filters#matcher_default#use(['matcher_fuzzy'])
 " Goodbye CtrlP
-nnoremap <leader>f :Unite -no-split -buffer-name=files -start-insert file_mru file_rec/async <cr>
-nnoremap <leader>fv :Unite -vertical -buffer-name=files -start-insert file_mru file_rec/async <cr>
+nnoremap <leader>f :Unite -no-split -buffer-name=files -start-insert file_mru file_rec/async<cr>
+nnoremap <leader>vf :Unite -vertical -buffer-name=files -start-insert file_mru file_rec/async<cr>
 " Buffer list
 nnoremap <leader>b :Unite -no-split -buffer-name=buffer -start-insert buffer<cr>
-nnoremap <leader>bv :Unite -vertical -buffer-name=buffer -start-insert buffer<cr>
+nnoremap <leader>vb :Unite -vertical -buffer-name=buffer -start-insert buffer<cr>
 " Tags!
 nnoremap <leader>p :Unite -no-split -buffer-name=outline -start-insert outline<cr>
 " Yank history!
@@ -484,3 +479,22 @@ set secure " disable unsafe commands in those files
 set ttimeout
 set ttimeoutlen=250
 set notimeout
+
+" Testing some tweaks to make Vim faster
+let loaded_matchparen=1 " Don't load matchit.vim (paren/bracket matching)
+set noshowmatch         " Don't match parentheses/brackets
+set nocursorline        " Don't paint cursor line
+set nocursorcolumn      " Don't paint cursor column
+set lazyredraw          " Wait to redraw
+set scrolljump=8        " Scroll 8 lines at a time at bottom/top
+let html_no_rendering=1 " Don't render italic, bold, links in HTML
+
+" Testing some tweaks to fix wierd rendering issue of arrow keys
+nnoremap <Esc>A <up>
+nnoremap <Esc>B <down>
+nnoremap <Esc>C <right>
+nnoremap <Esc>D <left>
+inoremap <Esc>A <up>
+inoremap <Esc>B <down>
+inoremap <Esc>C <right>
+inoremap <Esc>D <left>

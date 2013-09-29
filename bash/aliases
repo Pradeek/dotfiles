@@ -25,6 +25,12 @@ alias f='ffind'
 alias ipaddr="ifconfig | grep broadcast | grep inet | cut -d ' ' -f 2"
 alias webserver='python -m SimpleHTTPServer'
 
+# Ag
+alias agpy='ag -G .py'
+alias agjs='ag -G .js'
+alias agcss='ag -G .css'
+alias aghtml='ag -G .html'
+
 # Mercurial
 alias diff='hg diff --git -wBb'
 alias import='hg import --no-commit'
@@ -48,3 +54,6 @@ alias json='python -mjson.tool'
 # Aliases for notes
 alias n='cd ~/Dropbox/Notes/ && ls'
 alias t='vim ~/Dropbox/Notes/todo.txt'
+
+# Vagrant helper
+alias vagrant_ssh='ssh -i ~/.vagrant.d/insecure_private_key vagrant@'
