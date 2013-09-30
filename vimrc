@@ -363,6 +363,14 @@ if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &rtp) ==# ''
 runtime! macros/matchit.vim
 endif
 
+" YouCompleteMe completion preview
+let g:ycm_add_preview_to_completeopt = 0
+
+" Go To definition
+nnoremap <C-d> :YcmCompleter GoToDefinitionElseDeclaration<CR>
+" nnoremap <C-d>c :YcmCompleter GoToDeclaration<CR>
+" nnoremap <C-d>f :YcmCompleter GoToDefinition<CR>
+
 " Tell YouCompleteMe to take identifiers from tags
 let g:ycm_collect_identifiers_from_tags_files = 1
 let g:ycm_semantic_triggers =  {
@@ -411,7 +419,8 @@ let g:ackprg = 'ag --nogroup --nocolor --column'
 autocmd FileType python call s:python_mode_settings()
 function! s:python_mode_settings()
     setlocal wrap
-    nnoremap <leader>br iimport pdb; pdb.set_trace()<CR>
+
+    nnoremap <leader>br iimport ipdb; ipdb.set_trace()<CR>
 endfunction
 
 " DWM.vim
