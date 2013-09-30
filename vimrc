@@ -279,6 +279,7 @@ vnoremap <leader>s <ESC> :w <CR>
 inoremap <leader>d <ESC> :BD <CR>
 nnoremap <leader>d <ESC> :BD <CR>
 vnoremap <leader>d <ESC> :BD <CR>
+cnoremap bd BD
 
 " Bubble text
 " Bubble single lines
