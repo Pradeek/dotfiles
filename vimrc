@@ -13,6 +13,7 @@ Bundle 'gmarik/vundle'
 Bundle 'spolu/dwm.vim'
 " Split management
 Bundle 'roman/golden-ratio'
+Bundle 'vim-scripts/bufkill.vim'
 " Undo management
 Bundle 'sjl/gundo.vim'
 " VCS
@@ -73,6 +74,8 @@ Bundle 'Raimondi/delimitMate'
 Bundle 'terryma/vim-multiple-cursors'
 " Javascript intelligence
 Bundle 'marijnh/tern_for_vim'
+" Python linters
+Bundle 'nvie/vim-flake8'
 " Better syntax
 Bundle 'plasticboy/vim-markdown'
 Bundle 'jelera/vim-javascript-syntax'
@@ -273,9 +276,9 @@ inoremap <leader>s <ESC> :w <CR>
 nnoremap <leader>s <ESC> :w <CR>
 vnoremap <leader>s <ESC> :w <CR>
 " Map <leader>d to delete the buffer
-inoremap <leader>d <ESC> :bd <CR>
-nnoremap <leader>d <ESC> :bd <CR>
-vnoremap <leader>d <ESC> :bd <CR>
+inoremap <leader>d <ESC> :BD <CR>
+nnoremap <leader>d <ESC> :BD <CR>
+vnoremap <leader>d <ESC> :BD <CR>
 
 " Bubble text
 " Bubble single lines
@@ -419,8 +422,9 @@ let g:ackprg = 'ag --nogroup --nocolor --column'
 autocmd FileType python call s:python_mode_settings()
 function! s:python_mode_settings()
     setlocal wrap
-
     nnoremap <leader>br iimport ipdb; ipdb.set_trace()<CR>
+    command! PyLint call Flake8()
+    cmap pylint PyLint
 endfunction
 
 " DWM.vim
