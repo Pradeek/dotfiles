@@ -181,7 +181,6 @@ let mapleader=","
 " Annoyances
 " Set leader to , instead of \
 command! -bang -range=% -complete=file -nargs=* W <line1>,<line2>write<bang> <args>
-command! -bang -range=% -complete=file -nargs=* E <line1>,<line2>write<bang> <args>
 command! -bang Q quit<bang>
 nnoremap <leader>c :bp\|bd #<CR>
 
@@ -192,41 +191,40 @@ function! TrimTrailingWhitespace()
   execute"normal `z"
 endfunction
 
-" JSON formatting
-nnoremap <leader>js :%!python -m json.tool<CR>
-
 " Auto commands
 if !exists("autocommands_loaded")
-    let autocommands_loaded = 1
-    " Automatically reload .vimrc on save
-    autocmd BufWritePost .vimrc source %
-    " Save when you lose focus (don't warn about unsaved files)
-    autocmd FocusLost * silent! wa
-    " Treat .json files as .js
-    autocmd BufNewFile,BufRead *.json setfiletype json syntax=javascript
-    " Trim trialing whitespace always
-    " autocmd BufWrite * :call TrimTrailingWhitespace()
-    " Jump to the last position when reopening a file
-    autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+let autocommands_loaded = 1
+" Automatically reload .vimrc on save
+autocmd BufWritePost .vimrc source %
+" Save when you lose focus (don't warn about unsaved files)
+autocmd FocusLost * silent! wa
+" Treat .json files as .js
+autocmd BufNewFile,BufRead *.json setfiletype json syntax=javascript
+" JSON formatting
+autocmd FileType json nnoremap <leader>js :%!python -m json.tool<CR>
+" Trim trialing whitespace always
+" autocmd BufWrite * :call TrimTrailingWhitespace()
+" Jump to the last position when reopening a file
+autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 endif
 
 " vimrc shortcut and fold expression
 nmap <silent> <leader>ev :e $MYVIMRC<CR>
 autocmd FileType vim call s:vimrc_settings()
 function! s:vimrc_settings()
-    setlocal foldenable
-    setlocal foldmethod=expr
-    setlocal foldexpr=GetVimScriptFold(v:lnum)
-    function! GetVimScriptFold(line_number)
-        let current_line = getline(a:line_number)
-        if current_line =~? '\v^\"'
-            return '1'
-        elseif current_line =~? '\v^\s*$'
-            return '0'
-        else
-            return 1
-        endif
-    endfunction
+setlocal foldenable
+setlocal foldmethod=expr
+setlocal foldexpr=GetVimScriptFold(v:lnum)
+function! GetVimScriptFold(line_number)
+    let current_line = getline(a:line_number)
+    if current_line =~? '\v^\"'
+        return '1'
+    elseif current_line =~? '\v^\s*$'
+        return '0'
+    else
+        return 1
+    endif
+endfunction
 endfunction
 
 " Folding for HTML
@@ -235,7 +233,7 @@ endfunction
 autocmd FileType html call s:HtmlSettings()
 autocmd FileType htmldjango call s:HtmlSettings()
 function! s:HtmlSettings()
-    nnoremap <space> Vatzf
+nnoremap <space> Vatzf
 endfunction
 
 " indent and keep selection so that I can do it again
@@ -313,19 +311,19 @@ nnoremap <leader>h2 yyp^v$r-
 
 " Remote file editing goodness
 if !exists("g:remote_edit_session_host")
-    let g:remote_edit_session_host = ''
+let g:remote_edit_session_host = ''
 endif
 function! RemoteEditOpen(host)
-    let g:remote_edit_session_host = a:host
-    echo 'Opening ssh session to ' . a:host
-    silent execute '!ssh -f -N ' . a:host | redraw!
-    echo 'Opened ssh session to ' . a:host
-    echo 'Do not forget to call RemoteEditEnd once you are done'
+let g:remote_edit_session_host = a:host
+echo 'Opening ssh session to ' . a:host
+silent execute '!ssh -f -N ' . a:host | redraw!
+echo 'Opened ssh session to ' . a:host
+echo 'Do not forget to call RemoteEditEnd once you are done'
 endfunction
 function! RemoteEditClose()
-    silent execute '!ps -ef | grep ' . g:remote_edit_session_host . ' | grep -v grep | awk ' . "'{print $2'}" .' | xargs kill -9' | redraw!
-    echo 'Closed connection to ' . g:remote_edit_session_host
-    let g:remote_edit_session_host = ''
+silent execute '!ps -ef | grep ' . g:remote_edit_session_host . ' | grep -v grep | awk ' . "'{print $2'}" .' | xargs kill -9' | redraw!
+echo 'Closed connection to ' . g:remote_edit_session_host
+let g:remote_edit_session_host = ''
 endfunction
 command! -nargs=1 RemoteEdit call RemoteEditOpen("<args>")
 command! RemoteEditEnd call RemoteEditClose()
@@ -353,8 +351,8 @@ vnoremap <Leader>a: :Tabularize /:\zs<CR>
 " Disable syntastic plugin for html files since it complains about templates
 " in script tags
 let g:syntastic_mode_map={ 'mode': 'active',
-                \ 'active_filetypes': [],
-                \ 'passive_filetypes': ['html'] }
+            \ 'active_filetypes': [],
+            \ 'passive_filetypes': ['html'] }
 
 " Replaced by Unite.vim - Leaving it here in case I come back
 " CtrlP settings
@@ -397,12 +395,12 @@ function! g:UltiSnips_Complete()
 call UltiSnips_ExpandSnippet()
 if g:ulti_expand_res == 0
 if pumvisible()
-    return "\<C-n>"
+return "\<C-n>"
 else
-    call UltiSnips_JumpForwards()
-    if g:ulti_jump_forwards_res == 0
-        return "\<TAB>"
-    endif
+call UltiSnips_JumpForwards()
+if g:ulti_jump_forwards_res == 0
+    return "\<TAB>"
+endif
 endif
 endif
 return ""
@@ -422,10 +420,14 @@ let g:ackprg = 'ag --nogroup --nocolor --column'
 " Vim python-mode
 autocmd FileType python call s:python_mode_settings()
 function! s:python_mode_settings()
-    setlocal wrap
-    nnoremap <leader>br iimport ipdb; ipdb.set_trace()<CR>
-    command! PyLint call Flake8()
-    cmap pylint PyLint
+setlocal wrap
+command! PyLint call Flake8()
+cmap pylint PyLint
+noremap <leader>br :call InsertLine()<CR>
+function! InsertLine()
+    let trace = expand("import ipdb; ipdb.set_trace()")
+    execute "normal o".trace
+endfunction
 endfunction
 
 " DWM.vim
@@ -445,6 +447,8 @@ let g:dwm_master_pane_width=120
 let g:unite_enable_start_insert = 1
 " Yank history
 let g:unite_source_history_yank_enable = 1
+" Cache max of 500 files
+let g:unite_source_rec_max_cache_files=500
 " Use ag for search.
 let g:unite_source_grep_command="ag"
 let g:unite_source_grep_default_opts="-i --nocolor --nogroup"
@@ -453,8 +457,8 @@ let g:unite_prompt = '» '
 " Fuzzy search ALL THE THINGS!
 call unite#filters#matcher_default#use(['matcher_fuzzy'])
 " Goodbye CtrlP
-nnoremap <leader>f :Unite -no-split -buffer-name=files -start-insert file_mru file_rec/async<cr>
-nnoremap <leader>vf :Unite -vertical -buffer-name=files -start-insert file_mru file_rec/async<cr>
+nnoremap <leader>f :Unite -no-split -buffer-name=files -start-insert -auto-resize -auto-preview buffer file_mru file file_rec/async<cr>
+nnoremap <leader>vf :Unite -vertical -buffer-name=files -start-insert -auto-preview file_mru file_rec/async<cr>
 " Buffer list
 nnoremap <leader>b :Unite -no-split -buffer-name=buffer -start-insert buffer<cr>
 nnoremap <leader>vb :Unite -vertical -buffer-name=buffer -start-insert buffer<cr>
@@ -464,8 +468,11 @@ nnoremap <leader>p :Unite -no-split -buffer-name=outline -start-insert outline<c
 nnoremap <leader>y :Unite -no-split -buffer-name=yank history/yank<cr>
 " Go to directory
 nnoremap <leader>cd :<C-u>Unite -no-split directory_mru directory_rec:. -start-insert -buffer-name=cd -default-action=cd<CR>
+nnoremap E :UniteWithBufferDir -buffer-name=files buffer file<CR>
 " Super search
-nnoremap <leader>g :Unite -buffer-name=search -start-insert grep:.<cr>
+nnoremap <leader>g :Unite -buffer-name=search -start-insert -auto-preview grep:.<cr>
+nnoremap <leader>l :Unite -buffer-name=search_line line -start-insert<CR>
+nnoremap <leader>j :Unite -buffer-name=jump jump -start-insert<CR>
 " Custom mappings for the unite buffer
 autocmd FileType unite call s:unite_settings()
 function! s:unite_settings()
@@ -481,6 +488,9 @@ function! s:unite_settings()
   " change directories in unite
   nmap <buffer> <nowait> <leader>cd <Plug>(unite_restart)
 endfunction
+" Window config
+let g:unite_winheight = 10
+let g:unite_split_rule = 'topleft'
 
 " vimfiler
 let g:vimfiler_as_default_explorer = 1
