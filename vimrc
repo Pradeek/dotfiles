@@ -59,21 +59,26 @@ Bundle 'scrooloose/nerdtree'
 Bundle 'mattn/emmet-vim'
 " Tagbar / Autocomplete / Go to symbol
 Bundle 'majutsushi/tagbar'
-Bundle 'Valloric/YouCompleteMe'
+" Bundle 'Valloric/YouCompleteMe'
+Bundle 'Shougo/neocomplete.vim'
 Bundle 'travisjeffery/vim-gotosymbol'
 " Go to character
 Bundle 'svermeulen/vim-extended-ft'
-Bundle 'goldfeld/vim-seek'
+Bundle 'justinmk/vim-sneak'
 " Change surrounding text
 Bundle 'tpope/vim-surround'
 " Snippets
 Bundle 'SirVer/ultisnips'
+Bundle 'Shougo/neosnippet.vim'
+Bundle 'honza/vim-snippets'
 " Adds closing tags automatically
 Bundle 'Raimondi/delimitMate'
 " Allows selection of multiple occurances of a patterns for faster changes
 Bundle 'terryma/vim-multiple-cursors'
 " Javascript intelligence
 Bundle 'marijnh/tern_for_vim'
+" Python tools
+Bundle 'davidhalter/jedi-vim'
 " Python linters
 Bundle 'nvie/vim-flake8'
 " Better syntax
@@ -125,6 +130,9 @@ inoremap <Up> <C-o>gk
 set autowrite
 " Enable mouse in normal mode
 set mouse=n
+" Show spaces and tabs - Doesn't seem to be working for existing code
+" set listchars=tab:>~,nbsp:.,trail:.
+" set list
 
 " Don't backup files.
 set nobackup
@@ -261,9 +269,6 @@ inoremap <C-e> <C-o>$
 nnoremap <C-e> $
 nnoremap <C-a> 0
 
-" Fast switching between files
-nnoremap ,; <C-^>
-
 " Make vim look pretty
 colorscheme desert
 
@@ -277,7 +282,7 @@ vnoremap <leader>s <ESC> :w <CR>
 inoremap <leader>d <ESC> :BD <CR>
 nnoremap <leader>d <ESC> :BD <CR>
 vnoremap <leader>d <ESC> :BD <CR>
-cnoremap bd BD
+" cnoremap bd BD
 
 " Bubble text
 " Bubble single lines
@@ -429,6 +434,11 @@ function! InsertLine()
     execute "normal o".trace
 endfunction
 endfunction
+" Ignore some these PEP8 errors
+let g:flake8_ignore="E221,E222,E302"
+" E221 - multiple spaces before operator
+" E222 - multiple spaces after operator
+" E302  expected 2 blank lines, found 0
 
 " DWM.vim
 nnoremap <silent> <C-w> :call DWM_New()<CR>
@@ -457,7 +467,7 @@ let g:unite_prompt = '» '
 " Fuzzy search ALL THE THINGS!
 call unite#filters#matcher_default#use(['matcher_fuzzy'])
 " Goodbye CtrlP
-nnoremap <leader>f :Unite -no-split -buffer-name=files -start-insert -auto-resize -auto-preview buffer file_mru file file_rec/async<cr>
+nnoremap <leader>f :Unite -no-split -buffer-name=files -start-insert -auto-resize buffer file_mru file file_rec/async<cr>
 nnoremap <leader>vf :Unite -vertical -buffer-name=files -start-insert -auto-preview file_mru file_rec/async<cr>
 " Buffer list
 nnoremap <leader>b :Unite -no-split -buffer-name=buffer -start-insert buffer<cr>
@@ -522,3 +532,111 @@ inoremap <Esc>A <up>
 inoremap <Esc>B <down>
 inoremap <Esc>C <right>
 inoremap <Esc>D <left>
+
+" Trying out neocomplete. 
+"Note: This option must set it in .vimrc(_vimrc).  NOT IN .gvimrc(_gvimrc)!
+" Disable AutoComplPop.
+let g:acp_enableAtStartup = 0
+" Use neocomplete.
+let g:neocomplete#enable_at_startup = 1
+" Use smartcase.
+let g:neocomplete#enable_smart_case = 1
+" Set minimum syntax keyword length.
+let g:neocomplete#sources#syntax#min_keyword_length = 1
+let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
+" Define dictionary.
+let g:neocomplete#sources#dictionary#dictionaries = {
+    \ 'default' : '',
+    \ 'vimshell' : $HOME.'/.vimshell_hist',
+    \ 'scheme' : $HOME.'/.gosh_completions'
+        \ }
+" Define keyword.
+if !exists('g:neocomplete#keyword_patterns')
+    let g:neocomplete#keyword_patterns = {}
+endif
+let g:neocomplete#keyword_patterns['default'] = '\h\w*'
+" Plugin key-mappings.
+inoremap <expr><C-g>     neocomplete#undo_completion()
+inoremap <expr><C-l>     neocomplete#complete_common_string()
+" Recommended key-mappings.
+" <CR>: close popup and save indent.
+inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+function! s:my_cr_function()
+  return neocomplete#smart_close_popup() . "\<CR>"
+  " For no inserting <CR> key.
+  "return pumvisible() ? neocomplete#close_popup() : "\<CR>"
+endfunction
+" <TAB>: completion.
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+" <C-h>, <BS>: close popup and delete backword char.
+inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
+inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
+inoremap <expr><C-y>  neocomplete#close_popup()
+inoremap <expr><C-e>  neocomplete#cancel_popup()
+" Close popup by <Space>.
+"inoremap <expr><Space> pumvisible() ? neocomplete#close_popup() : "\<Space>"
+" For cursor moving in insert mode(Not recommended)
+"inoremap <expr><Left>  neocomplete#close_popup() . "\<Left>"
+"inoremap <expr><Right> neocomplete#close_popup() . "\<Right>"
+"inoremap <expr><Up>    neocomplete#close_popup() . "\<Up>"
+"inoremap <expr><Down>  neocomplete#close_popup() . "\<Down>"
+" Or set this.
+" let g:neocomplete#enable_cursor_hold_i = 1
+" Or set this.
+"let g:neocomplete#enable_insert_char_pre = 1
+" AutoComplPop like behavior.
+let g:neocomplete#enable_auto_select = 1
+" Shell like behavior(not recommended).
+"set completeopt+=longest
+"let g:neocomplete#enable_auto_select = 1
+"let g:neocomplete#disable_auto_complete = 1
+"inoremap <expr><TAB>  pumvisible() ? "\<Down>" : "\<C-x>\<C-u>"
+" Enable omni completion.
+autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+" Enable heavy omni completion.
+if !exists('g:neocomplete#sources#omni#input_patterns')
+  let g:neocomplete#sources#omni#input_patterns = {}
+endif
+"let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
+"let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
+"let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
+" For perlomni.vim setting.
+" https://github.com/c9s/perlomni.vim
+let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
+
+" Neosnippet config
+" Plugin key-mappings.
+imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+xmap <C-k>     <Plug>(neosnippet_expand_target)
+
+" SuperTab like snippets behavior.
+imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+            \ "\<Plug>(neosnippet_expand_or_jump)"
+            \: pumvisible() ? "\<C-n>" : "\<TAB>"
+smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+            \ "\<Plug>(neosnippet_expand_or_jump)"
+            \: "\<TAB>"
+
+" For snippet_complete marker.
+if has('conceal')
+      set conceallevel=2 concealcursor=i
+endif
+let g:neosnippet#enable_snipmate_compatibility = 1
+let g:neosnippet#snippets_directory='~/.vim/bundle/vim-snippets/snippets'
+
+" jedi-vim config
+autocmd FileType python setlocal omnifunc=jedi#completions
+let g:jedi#auto_vim_configuration = 0
+"let g:neocomplete#force_omni_input_patterns.python = '[^. \t]\.\w*'
+let g:jedi#use_tabs_not_buffers = 0
+let g:jedi#use_splits_not_buffers = "left"
+let g:jedi#goto_definitions_command = "<C-d>"
+let g:jedi#documentation_command = "K"
+let g:jedi#rename_command = "<leader>re"
+let g:jedi#show_call_signatures = "1"
+let g:jedi#popup_select_first = 0

@@ -1,3 +1,9 @@
+# Calling it here as well since I'm setting up some important PATHs
+# TODO: Move common dependant envs into this folder
+if [ -f ~/.bashrc.local ]; then
+  source ~/.bashrc.local
+fi
+
 source ~/dotfiles/bash/config
 source ~/dotfiles/bash/aliases
 source ~/dotfiles/bash/functions
