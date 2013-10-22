@@ -134,6 +134,49 @@ set mouse=n
 " Show spaces and tabs - Doesn't seem to be working for existing code
 " set listchars=tab:>~,nbsp:.,trail:.
 " set list
+set shortmess=atI   " Don't show the Vim intro message
+set autoread " Auto reload files changed outside
+" Folder specific vimrc
+set exrc " enable per directory vimrc files
+set secure " disable unsafe commands in those files
+
+" Timeout settings
+set ttimeout
+set ttimeoutlen=100
+set notimeout
+
+" Testing some tweaks to make Vim faster
+let loaded_matchparen=1 " Don't load matchit.vim (paren/bracket matching)
+set noshowmatch         " Don't match parentheses/brackets
+set nocursorline        " Don't paint cursor line
+set nocursorcolumn      " Don't paint cursor column
+set lazyredraw          " Wait to redraw
+set scrolljump=8        " Scroll 8 lines at a time at bottom/top
+let html_no_rendering=1 " Don't render italic, bold, links in HTML
+
+" Testing some tweaks to fix wierd rendering issue of arrow keys
+nnoremap <Esc>A <up>
+nnoremap <Esc>B <down>
+nnoremap <Esc>C <right>
+nnoremap <Esc>D <left>
+inoremap <Esc>A <up>
+inoremap <Esc>B <down>
+inoremap <Esc>C <right>
+inoremap <Esc>D <left>
+
+" File ignores
+" Disable output and VCS files
+set wildignore+=*.o,*.out,*.obj,.git,*.rbc,*.rbo,*.class,.svn,*.gem
+" Disable archive files
+set wildignore+=*.zip,*.tar.gz,*.tar.bz2,*.rar,*.tar.xz
+" Ignore bundler and sass cache
+set wildignore+=*/vendor/gems/*,*/vendor/cache/*,*/.bundle/*,*/.sass-cache/*
+" Ignore rails temporary asset caches
+set wildignore+=*/tmp/cache/assets/*/sprockets/*,*/tmp/cache/assets/*/sass/*
+" Ignore node modules
+set wildignore+=node_modules/*
+" Disable temp and backup files
+set wildignore+=*.swp,*~,._*
 
 " Don't backup files.
 set nobackup
@@ -185,6 +228,7 @@ nnoremap Y bv$hd
 nnoremap <silent> <Tab> :bn<CR>
 nnoremap <silent> <S-Tab> :bp<CR>
 
+" Use , instead of \ for leader
 let mapleader=","
 
 " Annoyances
@@ -306,6 +350,9 @@ inoremap <leader>w <ESC>ciw
 " Better shortcuts for incrementing/decrementing numbers
 nnoremap + <C-a>
 nnoremap - <C-x>
+
+" Command mappings
+cnoremap %% <C-R>=expand('%:h').'/'<cr>
 
 " Operator mappings
 onoremap p i(
@@ -511,33 +558,18 @@ let g:unite_split_rule = 'topleft'
 " vimfiler
 let g:vimfiler_as_default_explorer = 1
 
-" Folder specific vimrc
-set exrc " enable per directory vimrc files
-set secure " disable unsafe commands in those files
-
-" Timeout settings
-set ttimeout
-set ttimeoutlen=250
-set notimeout
-
-" Testing some tweaks to make Vim faster
-let loaded_matchparen=1 " Don't load matchit.vim (paren/bracket matching)
-set noshowmatch         " Don't match parentheses/brackets
-set nocursorline        " Don't paint cursor line
-set nocursorcolumn      " Don't paint cursor column
-set lazyredraw          " Wait to redraw
-set scrolljump=8        " Scroll 8 lines at a time at bottom/top
-let html_no_rendering=1 " Don't render italic, bold, links in HTML
-
-" Testing some tweaks to fix wierd rendering issue of arrow keys
-nnoremap <Esc>A <up>
-nnoremap <Esc>B <down>
-nnoremap <Esc>C <right>
-nnoremap <Esc>D <left>
-inoremap <Esc>A <up>
-inoremap <Esc>B <down>
-inoremap <Esc>C <right>
-inoremap <Esc>D <left>
+" jedi-vim config
+autocmd FileType python setlocal omnifunc=jedi#completions
+let g:jedi#auto_vim_configuration = 0
+"let g:neocomplete#force_omni_input_patterns.python = '[^. \t]\.\w*'
+let g:jedi#use_tabs_not_buffers = 0
+let g:jedi#use_splits_not_buffers = "left"
+let g:jedi#goto_definitions_command = "<C-d>"
+let g:jedi#documentation_command = "K"
+let g:jedi#rename_command = "<leader>re"
+let g:jedi#show_call_signatures = "1"
+let g:jedi#popup_select_first = 0
+let g:jedi#popup_on_dot = 0
 
 " Trying out neocomplete. 
 "Note: This option must set it in .vimrc(_vimrc).  NOT IN .gvimrc(_gvimrc)!
@@ -635,15 +667,3 @@ endif
 let g:neosnippet#enable_snipmate_compatibility = 1
 let g:neosnippet#snippets_directory='~/.vim/bundle/vim-snippets/snippets'
 
-" jedi-vim config
-autocmd FileType python setlocal omnifunc=jedi#completions
-let g:jedi#auto_vim_configuration = 0
-"let g:neocomplete#force_omni_input_patterns.python = '[^. \t]\.\w*'
-let g:jedi#use_tabs_not_buffers = 0
-let g:jedi#use_splits_not_buffers = "left"
-let g:jedi#goto_definitions_command = "<C-d>"
-let g:jedi#documentation_command = "K"
-let g:jedi#rename_command = "<leader>re"
-let g:jedi#show_call_signatures = "1"
-let g:jedi#popup_select_first = 0
-let g:jedi#popup_on_dot = 0
