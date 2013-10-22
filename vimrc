@@ -47,6 +47,7 @@ Bundle 'Shougo/unite.vim'
 Bundle 'Shougo/unite-ssh'
 " Bunch of color schemes
 Bundle 'Colour-Sampler-Pack'
+Bundle 'junegunn/seoul256.vim'
 " Status bar
 Bundle 'bling/vim-airline'
 " Bindings for ack (using ag in the back)
@@ -242,6 +243,7 @@ autocmd FileType html call s:HtmlSettings()
 autocmd FileType htmldjango call s:HtmlSettings()
 function! s:HtmlSettings()
 nnoremap <space> Vatzf
+nnoremap <leader>re :silent !chrome-reload-current<CR>:redraw!<CR>
 endfunction
 
 " indent and keep selection so that I can do it again
@@ -271,6 +273,7 @@ nnoremap <C-a> 0
 
 " Make vim look pretty
 colorscheme desert
+set background=dark
 
 " Convinent save/delete
 " Using noremap for the mappings below screws up insert mode
@@ -436,6 +439,9 @@ endfunction
 endfunction
 " Ignore some these PEP8 errors
 let g:flake8_ignore="E221,E222,E302"
+let g:syntastic_python_checkers=['flake8']
+let g:syntastic_python_checker_args='--ignore=E221,E222,E302'
+let g:syntastic_python_flake8_post_args='--ignore=E221,E222,E302'
 " E221 - multiple spaces before operator
 " E222 - multiple spaces after operator
 " E302  expected 2 blank lines, found 0
@@ -640,3 +646,4 @@ let g:jedi#documentation_command = "K"
 let g:jedi#rename_command = "<leader>re"
 let g:jedi#show_call_signatures = "1"
 let g:jedi#popup_select_first = 0
+let g:jedi#popup_on_dot = 0
