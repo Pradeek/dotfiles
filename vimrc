@@ -107,6 +107,7 @@ filetype plugin indent on
 " Keep the buffer around when switching between buffers
 set hidden
 " Show line numbers
+set relativenumber
 set number
 " Basic editing stuff
 " set wrap " Wrap lines
@@ -236,6 +237,11 @@ let mapleader=","
 command! -bang -range=% -complete=file -nargs=* W <line1>,<line2>write<bang> <args>
 command! -bang Q quit<bang>
 nnoremap <leader>c :bp\|bd #<CR>
+function! MkDirCurrent()
+    let current_path = expand("%:h")
+    call mkdir(current_path, "p")
+endfunction
+command! MkDirCurrent call MkDirCurrent()
 
 " Trim trailing spaces
 function! TrimTrailingWhitespace()
@@ -505,56 +511,6 @@ nnoremap <leader>w :wincmd w<CR>
 nnoremap <leader>W :wincmd W<CR>
 let g:dwm_master_pane_width=120
 
-" Unite.vim
-" Always go to insert mode
-let g:unite_enable_start_insert = 1
-" Yank history
-let g:unite_source_history_yank_enable = 1
-" Cache max of 500 files
-let g:unite_source_rec_max_cache_files=500
-" Use ag for search.
-let g:unite_source_grep_command="ag"
-let g:unite_source_grep_default_opts="-i --nocolor --nogroup"
-" Fancy prompts
-let g:unite_prompt = '» '
-" Fuzzy search ALL THE THINGS!
-call unite#filters#matcher_default#use(['matcher_fuzzy'])
-" Goodbye CtrlP
-nnoremap <leader>f :Unite -no-split -buffer-name=files -start-insert -auto-resize buffer file_mru file file_rec/async<cr>
-nnoremap <leader>vf :Unite -vertical -buffer-name=files -start-insert -auto-preview file_mru file_rec/async<cr>
-" Buffer list
-nnoremap <leader>b :Unite -no-split -buffer-name=buffer -start-insert buffer<cr>
-nnoremap <leader>vb :Unite -vertical -buffer-name=buffer -start-insert buffer<cr>
-" Tags!
-nnoremap <leader>p :Unite -no-split -buffer-name=outline -start-insert outline<cr>
-" Yank history!
-nnoremap <leader>y :Unite -no-split -buffer-name=yank history/yank<cr>
-" Go to directory
-nnoremap <leader>cd :<C-u>Unite -no-split directory_mru directory_rec:. -start-insert -buffer-name=cd -default-action=cd<CR>
-nnoremap E :UniteWithBufferDir -buffer-name=files buffer file<CR>
-" Super search
-nnoremap <leader>g :Unite -buffer-name=search -start-insert -auto-preview grep:.<cr>
-nnoremap <leader>l :Unite -buffer-name=search_line line -start-insert<CR>
-nnoremap <leader>j :Unite -buffer-name=jump jump -start-insert<CR>
-" Custom mappings for the unite buffer
-autocmd FileType unite call s:unite_settings()
-function! s:unite_settings()
-  setlocal nolist nopaste
-  " Do the right thing on ESC
-  nmap <buffer> <nowait> q <Plug>(unite_exit)
-  imap <buffer> <nowait> q <Plug>(unite_exit)
-  " <Tab> to go to next line
-  imap <buffer> <TAB>   <Plug>(unite_select_next_line)
-  " refresh the cache
-  nmap <buffer> <nowait> <F5>  <Plug>(unite_redraw)
-  imap <buffer> <nowait> <F5>  <Plug>(unite_redraw)
-  " change directories in unite
-  nmap <buffer> <nowait> <leader>cd <Plug>(unite_restart)
-endfunction
-" Window config
-let g:unite_winheight = 10
-let g:unite_split_rule = 'topleft'
-
 " vimfiler
 let g:vimfiler_as_default_explorer = 1
 
@@ -564,14 +520,16 @@ let g:jedi#auto_vim_configuration = 0
 "let g:neocomplete#force_omni_input_patterns.python = '[^. \t]\.\w*'
 let g:jedi#use_tabs_not_buffers = 0
 let g:jedi#use_splits_not_buffers = "left"
+let g:jedi#goto_assignments_command = "<C-g>"
 let g:jedi#goto_definitions_command = "<C-d>"
 let g:jedi#documentation_command = "K"
 let g:jedi#rename_command = "<leader>re"
+let g:jedi#usages_command = "<leader>n"
 let g:jedi#show_call_signatures = "1"
-let g:jedi#popup_select_first = 0
+let g:jedi#popup_select_first = 1
 let g:jedi#popup_on_dot = 0
 
-" Trying out neocomplete. 
+" Trying out neocomplete.
 "Note: This option must set it in .vimrc(_vimrc).  NOT IN .gvimrc(_gvimrc)!
 " Disable AutoComplPop.
 let g:acp_enableAtStartup = 0
@@ -667,3 +625,92 @@ endif
 let g:neosnippet#enable_snipmate_compatibility = 1
 let g:neosnippet#snippets_directory='~/.vim/bundle/vim-snippets/snippets'
 
+" Unite.vim
+" Always go to insert mode
+let g:unite_enable_start_insert = 1
+" Yank history
+let g:unite_source_history_yank_enable = 1
+" Cache max of 500 files
+let g:unite_source_rec_max_cache_files=500
+" Use ag for search.
+let g:unite_source_grep_command="ag"
+let g:unite_source_grep_default_opts="-i --nocolor --nogroup"
+" Fancy prompts
+let g:unite_prompt = '» '
+" Fuzzy search ALL THE THINGS!
+call unite#filters#matcher_default#use(['matcher_fuzzy'])
+" Goodbye CtrlP
+nnoremap <leader>f :Unite -no-split -buffer-name=files -start-insert -auto-resize buffer file_mru file file_rec/async<cr>
+nnoremap <leader>vf :Unite -vertical -buffer-name=files -start-insert -auto-preview file_mru file_rec/async<cr>
+" Buffer list
+nnoremap <leader>b :Unite -no-split -buffer-name=buffer -start-insert buffer<cr>
+nnoremap <leader>vb :Unite -vertical -buffer-name=buffer -start-insert buffer<cr>
+" Tags!
+nnoremap <leader>p :Unite -no-split -buffer-name=outline -start-insert outline<cr>
+" Yank history!
+nnoremap <leader>y :Unite -no-split -buffer-name=yank history/yank<cr>
+" Go to directory
+nnoremap <leader>cd :<C-u>Unite -no-split directory_mru directory_rec:. -start-insert -buffer-name=cd -default-action=cd<CR>
+nnoremap E :UniteWithBufferDir -buffer-name=files buffer file<CR>
+" Super search
+nnoremap <leader>g :Unite -buffer-name=search -start-insert -auto-preview grep:.<cr>
+nnoremap <leader>l :Unite -buffer-name=search_line line -start-insert<CR>
+nnoremap <leader>j :Unite -buffer-name=jump jump -start-insert<CR>
+" Custom mappings for the unite buffer
+autocmd FileType unite call s:unite_settings()
+function! s:unite_settings()
+  setlocal nolist nopaste
+  " Do the right thing on ESC
+  nmap <buffer> <nowait> q <Plug>(unite_exit)
+  imap <buffer> <nowait> q <Plug>(unite_exit)
+  " <Tab> to go to next line
+  imap <buffer> <TAB>   <Plug>(unite_select_next_line)
+  " refresh the cache
+  nmap <buffer> <nowait> <F5>  <Plug>(unite_redraw)
+  imap <buffer> <nowait> <F5>  <Plug>(unite_redraw)
+  " change directories in unite
+  nmap <buffer> <nowait> <leader>cd <Plug>(unite_restart)
+endfunction
+" Window config
+let g:unite_winheight = 10
+let g:unite_split_rule = 'topleft'
+
+" Magic file open 
+" Currently VERY stupid. 
+" Looks for first file with first matching directory
+" Does not return if file not in first directory
+" TODO:
+" Integrate with Unite.vim to show list of matches
+" Search for file in all possible subdirectories
+" Add file formats / ignores
+" Try adding second letters for matches
+" Try adding _ as a possible separator
+" Add a cache to make searching large codebases faster
+" Package / Release this as a plugin
+function! MagicFileOpen()
+    let chars = []
+    let nextChar = getchar()
+    while nextChar != 13
+        call add(chars, nr2char(nextChar))
+        let nextChar = getchar()
+    endwhile
+    let possible_path = "."
+    for char in chars
+        let current_path = possible_path
+        let matched_files = split(globpath(current_path, char . '*'), "\n")
+        for matched_file in matched_files
+            if isdirectory(matched_file) == 1
+                let possible_path = matched_file
+                break
+            endif
+        endfor
+    endfor
+    echo possible_path
+    let matches = split(globpath(possible_path, chars[-1] . '*'), "\n")
+    echo matches
+    if matches != []
+        exe ':find ' . matches[0]
+    endif
+endfunction
+command! MagicFile call MagicFileOpen()
+nnoremap e :MagicFile<CR>

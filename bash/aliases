@@ -36,6 +36,7 @@ alias diff='hg diff --git -wBb'
 alias import='hg import --no-commit'
 alias undo='hg revert --all'
 alias st='hg st'
+alias resolved='hg resolve -m $_'
 
 # Git
 alias gl='git log --graph --pretty=format:"%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset" --abbrev-commit'
