@@ -32,7 +32,6 @@ alias agcss='ag -G .css'
 alias aghtml='ag -G .html'
 
 # Mercurial
-alias diff='hg diff --git -wBb'
 alias import='hg import --no-commit'
 alias undo='hg revert --all'
 alias st='hg st'
@@ -58,3 +57,5 @@ alias t='vim ~/Dropbox/Notes/todo.txt'
 
 # Vagrant helper
 alias vagrant_ssh='ssh -i ~/.vagrant.d/insecure_private_key vagrant@'
+
+alias internet='ping 8.8.8.8'

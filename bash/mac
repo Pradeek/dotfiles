@@ -4,6 +4,7 @@ alias vim='mvim -v'
 alias resetdns='sudo killall -HUP mDNSResponder'
 alias mail='open -a Mail.app'
 alias preview='open -a Preview.app'
+alias emacs='open -a Emacs.app'
 
 alias trash='ls ~/.Trash'
 alias emptytrash='rm -rf ~/.Trash/*'
@@ -25,3 +26,18 @@ if [ -f $(brew --prefix)/etc/bash_completion ]; then
   . $(brew --prefix)/etc/bash_completion
   . $(brew --prefix)/etc/bash_completion.d/vagrant
 fi
+
+
+if [[ ( -z "$INSIDE_EMACS" || "$EMACS_BASH_COMPLETE" = "t" ) ]]; then
+  . $(brew --prefix)/etc/bash_completion
+  . $(brew --prefix)/etc/bash_completion.d/vagrant
+fi
+
+# Temporary alias to restart Virtualbox
+alias vbox_restart='sudo /Library/StartupItems/VirtualBox/VirtualBox restart'
+
+# Livereload everything
+alias livereload='watchmedo shell-command --patterns="*.py;*.html;*.css;*.js" --recursive --command "sleep 4 && chrome-reload-current"'
+
+# Vagrant
+alias vs='vagrant ssh'

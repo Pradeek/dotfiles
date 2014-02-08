@@ -119,3 +119,24 @@ function _jump {
 complete -o default -o nospace -F _jump jump
 complete -o default -o nospace -F _jump j
 
+# Git/Mercurial helpers
+
+function diff {
+    if [[ -d $PWD/.hg ]]; then
+        hg diff -wBb
+    else
+        if [[ -d $PWD/.git ]]; then
+            git diff
+        fi
+    fi
+}
+
+function push {
+    if [[ -d $PWD/.hg ]]; then
+        hg push
+    else
+        if [[ -d $PWD/.git ]]; then
+            git xpush
+        fi
+    fi
+}

@@ -2,6 +2,9 @@
 set nocompatible " Forget vi.
 filetype off
 
+" Shut up!
+set visualbell
+
 " Set up Vundle
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
@@ -33,6 +36,8 @@ Bundle 'godlygeek/tabular'
 Bundle 'tpope/vim-repeat'
 " Add comments faster
 Bundle 'tpope/vim-commentary'
+" Search / Replace preview
+Bundle 'osyo-manga/vim-over'
 " vimproc
 Bundle 'Shougo/vimproc.vim'
 " outline
@@ -45,6 +50,12 @@ Bundle 'Shougo/vimfiler.vim'
 Bundle 'Shougo/unite.vim'
 " Unite-ssh
 Bundle 'Shougo/unite-ssh'
+" Unite-mark
+Bundle 'tacroe/unite-mark'
+" Unite-session
+Bundle 'tungd/unite-session'
+Bundle 'xolox/vim-misc'
+Bundle 'xolox/vim-session'
 " Bunch of color schemes
 Bundle 'Colour-Sampler-Pack'
 Bundle 'junegunn/seoul256.vim'
@@ -60,6 +71,7 @@ Bundle 'scrooloose/nerdtree'
 Bundle 'mattn/emmet-vim'
 " Tagbar / Autocomplete / Go to symbol
 Bundle 'majutsushi/tagbar'
+Bundle 'sequenceGeek/MRU-Function'
 " Bundle 'Valloric/YouCompleteMe'
 Bundle 'Shougo/neocomplete.vim'
 Bundle 'travisjeffery/vim-gotosymbol'
@@ -86,7 +98,11 @@ Bundle 'nvie/vim-flake8'
 Bundle 'plasticboy/vim-markdown'
 Bundle 'jelera/vim-javascript-syntax'
 Bundle 'django.vim'
-Bundle 'nono/vim-handlebars'
+Bundle 'mustache/vim-mode'
+
+" Buffer movement
+" Look for stuff here
+set path=.,**
 
 " Status bar config
 " Powerline setup.
@@ -107,7 +123,7 @@ filetype plugin indent on
 " Keep the buffer around when switching between buffers
 set hidden
 " Show line numbers
-set relativenumber
+" set relativenumber
 set number
 " Basic editing stuff
 " set wrap " Wrap lines
@@ -147,27 +163,17 @@ set ttimeoutlen=100
 set notimeout
 
 " Testing some tweaks to make Vim faster
-let loaded_matchparen=1 " Don't load matchit.vim (paren/bracket matching)
-set noshowmatch         " Don't match parentheses/brackets
-set nocursorline        " Don't paint cursor line
-set nocursorcolumn      " Don't paint cursor column
-set lazyredraw          " Wait to redraw
-set scrolljump=8        " Scroll 8 lines at a time at bottom/top
+" let loaded_matchparen=1 " Don't load matchit.vim (paren/bracket matching)
+" set noshowmatch         " Don't match parentheses/brackets
+" set nocursorline        " Don't paint cursor line
+" set nocursorcolumn      " Don't paint cursor column
+" set lazyredraw          " Wait to redraw
+" set scrolljump=8        " Scroll 8 lines at a time at bottom/top
 let html_no_rendering=1 " Don't render italic, bold, links in HTML
-
-" Testing some tweaks to fix wierd rendering issue of arrow keys
-nnoremap <Esc>A <up>
-nnoremap <Esc>B <down>
-nnoremap <Esc>C <right>
-nnoremap <Esc>D <left>
-inoremap <Esc>A <up>
-inoremap <Esc>B <down>
-inoremap <Esc>C <right>
-inoremap <Esc>D <left>
 
 " File ignores
 " Disable output and VCS files
-set wildignore+=*.o,*.out,*.obj,.git,*.rbc,*.rbo,*.class,.svn,*.gem
+set wildignore+=*.o,*.out,*.obj,.git,*.rbc,*.rbo,*.class,.svn,*.gem,.hg
 " Disable archive files
 set wildignore+=*.zip,*.tar.gz,*.tar.bz2,*.rar,*.tar.xz
 " Ignore bundler and sass cache
@@ -178,6 +184,8 @@ set wildignore+=*/tmp/cache/assets/*/sprockets/*,*/tmp/cache/assets/*/sass/*
 set wildignore+=node_modules/*
 " Disable temp and backup files
 set wildignore+=*.swp,*~,._*
+" Disable merge related files
+set wildignore+=*.orig,*.rej
 
 " Don't backup files.
 set nobackup
@@ -206,7 +214,8 @@ set undolevels=1000 " More undo levels!
 set title " Show title
 set ruler " Display cursor position in lower right corner
 set showcmd " Display the command in lower right corner
-set splitright " Split window below/to the right
+" Split window to the right
+set splitright
 " Make cursor to always stay in the middle of the window
 set scrolloff=999
 
@@ -261,6 +270,8 @@ autocmd FocusLost * silent! wa
 autocmd BufNewFile,BufRead *.json setfiletype json syntax=javascript
 " JSON formatting
 autocmd FileType json nnoremap <leader>js :%!python -m json.tool<CR>
+" Fix html indent
+autocmd FileType html setlocal indentkeys-=*<Return>
 " Trim trialing whitespace always
 " autocmd BufWrite * :call TrimTrailingWhitespace()
 " Jump to the last position when reopening a file
@@ -345,10 +356,6 @@ nnoremap <C-j> ddp
 vnoremap <C-k> xkP`[V`]
 vnoremap <C-j> xp`[V`]
 
-" Easier shortcuts for cursor nav
-nnoremap ww 10k
-nnoremap ss 10j
-
 " Shortcuts for easier editing
 inoremap <leader>u <ESC>u
 inoremap <leader>w <ESC>ciw
@@ -356,6 +363,9 @@ inoremap <leader>w <ESC>ciw
 " Better shortcuts for incrementing/decrementing numbers
 nnoremap + <C-a>
 nnoremap - <C-x>
+
+" Redraw screen
+nnoremap <leader>C :redraw!<CR>
 
 " Command mappings
 cnoremap %% <C-R>=expand('%:h').'/'<cr>
@@ -411,9 +421,11 @@ vnoremap <Leader>a: :Tabularize /:\zs<CR>
 
 " Disable syntastic plugin for html files since it complains about templates
 " in script tags
-let g:syntastic_mode_map={ 'mode': 'active',
+let g:syntastic_enable_highlighting = 0
+let g:syntastic_quiet_warnings=1
+let g:syntastic_mode_map={ 'mode': 'passive',
             \ 'active_filetypes': [],
-            \ 'passive_filetypes': ['html'] }
+            \ 'passive_filetypes': ['js', 'html'] }
 
 " Replaced by Unite.vim - Leaving it here in case I come back
 " CtrlP settings
@@ -491,7 +503,7 @@ function! InsertLine()
 endfunction
 endfunction
 " Ignore some these PEP8 errors
-let g:flake8_ignore="E221,E222,E302"
+" let g:flake8_ignore="E221,E222,E302"
 let g:syntastic_python_checkers=['flake8']
 let g:syntastic_python_checker_args='--ignore=E221,E222,E302'
 let g:syntastic_python_flake8_post_args='--ignore=E221,E222,E302'
@@ -537,6 +549,9 @@ let g:acp_enableAtStartup = 0
 let g:neocomplete#enable_at_startup = 1
 " Use smartcase.
 let g:neocomplete#enable_smart_case = 1
+let g:neocomplete#auto_completion_start_length = 1
+let g:neocomplete#sources#buffer#cache_limit_size = 50000
+
 " Set minimum syntax keyword length.
 let g:neocomplete#sources#syntax#min_keyword_length = 1
 let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
@@ -551,6 +566,10 @@ if !exists('g:neocomplete#keyword_patterns')
     let g:neocomplete#keyword_patterns = {}
 endif
 let g:neocomplete#keyword_patterns['default'] = '\h\w*'
+if !exists('g:neocomplete#force_omni_input_patterns')
+  let g:neocomplete#force_omni_input_patterns = {}
+endif
+let g:neocomplete#force_omni_input_patterns.javascript = '[^. \t]\.\w*'
 " Plugin key-mappings.
 inoremap <expr><C-g>     neocomplete#undo_completion()
 inoremap <expr><C-l>     neocomplete#complete_common_string()
@@ -625,58 +644,58 @@ endif
 let g:neosnippet#enable_snipmate_compatibility = 1
 let g:neosnippet#snippets_directory='~/.vim/bundle/vim-snippets/snippets'
 
-" Unite.vim
-" Always go to insert mode
-let g:unite_enable_start_insert = 1
-" Yank history
-let g:unite_source_history_yank_enable = 1
-" Cache max of 500 files
-let g:unite_source_rec_max_cache_files=500
-" Use ag for search.
-let g:unite_source_grep_command="ag"
-let g:unite_source_grep_default_opts="-i --nocolor --nogroup"
-" Fancy prompts
-let g:unite_prompt = '» '
-" Fuzzy search ALL THE THINGS!
-call unite#filters#matcher_default#use(['matcher_fuzzy'])
-" Goodbye CtrlP
-nnoremap <leader>f :Unite -no-split -buffer-name=files -start-insert -auto-resize buffer file_mru file file_rec/async<cr>
-nnoremap <leader>vf :Unite -vertical -buffer-name=files -start-insert -auto-preview file_mru file_rec/async<cr>
-" Buffer list
-nnoremap <leader>b :Unite -no-split -buffer-name=buffer -start-insert buffer<cr>
-nnoremap <leader>vb :Unite -vertical -buffer-name=buffer -start-insert buffer<cr>
-" Tags!
-nnoremap <leader>p :Unite -no-split -buffer-name=outline -start-insert outline<cr>
-" Yank history!
-nnoremap <leader>y :Unite -no-split -buffer-name=yank history/yank<cr>
-" Go to directory
-nnoremap <leader>cd :<C-u>Unite -no-split directory_mru directory_rec:. -start-insert -buffer-name=cd -default-action=cd<CR>
-nnoremap E :UniteWithBufferDir -buffer-name=files buffer file<CR>
-" Super search
-nnoremap <leader>g :Unite -buffer-name=search -start-insert -auto-preview grep:.<cr>
-nnoremap <leader>l :Unite -buffer-name=search_line line -start-insert<CR>
-nnoremap <leader>j :Unite -buffer-name=jump jump -start-insert<CR>
-" Custom mappings for the unite buffer
-autocmd FileType unite call s:unite_settings()
-function! s:unite_settings()
-  setlocal nolist nopaste
-  " Do the right thing on ESC
-  nmap <buffer> <nowait> q <Plug>(unite_exit)
-  imap <buffer> <nowait> q <Plug>(unite_exit)
-  " <Tab> to go to next line
-  imap <buffer> <TAB>   <Plug>(unite_select_next_line)
-  " refresh the cache
-  nmap <buffer> <nowait> <F5>  <Plug>(unite_redraw)
-  imap <buffer> <nowait> <F5>  <Plug>(unite_redraw)
-  " change directories in unite
-  nmap <buffer> <nowait> <leader>cd <Plug>(unite_restart)
-endfunction
-" Window config
-let g:unite_winheight = 10
-let g:unite_split_rule = 'topleft'
 
-" Magic file open 
-" Currently VERY stupid. 
+" let g:unite_enable_start_insert = 1
+" " Yank history
+" let g:unite_source_history_yank_enable = 1
+" " Cache max of 500 files
+" let g:unite_source_rec_max_cache_files=500
+" " Use ag for search.
+" let g:unite_source_grep_command="ag"
+" let g:unite_source_grep_default_opts="-i --nocolor --nogroup"
+" " Fancy prompts
+" let g:unite_prompt = '» '
+" " Fuzzy search ALL THE THINGS!
+" call unite#filters#matcher_default#use(['matcher_fuzzy'])
+" " Goodbye CtrlP
+" nnoremap <leader>f :Unite -no-split -buffer-name=files -start-insert -auto-resize buffer file file_rec/async<cr>
+" nnoremap <leader>vf :Unite -vertical -buffer-name=files -start-insert -auto-preview file_rec/async<cr>
+" " Buffer list
+" nnoremap <leader>b :Unite -no-split -buffer-name=buffer -start-insert buffer<cr>
+" nnoremap <leader>vb :Unite -vertical -buffer-name=buffer -start-insert buffer<cr>
+" " Tags!
+" nnoremap <leader>p :Unite -no-split -buffer-name=outline -start-insert outline<cr>
+" " Yank history!
+" nnoremap <leader>y :Unite -no-split -buffer-name=yank history/yank<cr>
+" " Go to directory
+" nnoremap <leader>cd :<C-u>Unite -no-split directory_mru directory_rec:. -start-insert -buffer-name=cd -default-action=cd<CR>
+" nnoremap E :UniteWithBufferDir -buffer-name=files buffer file<CR>
+" " Super search
+" nnoremap <leader>g :Unite -buffer-name=search -start-insert -auto-preview grep:.<cr>
+" nnoremap <leader>l /
+" nnoremap / :Unite -buffer-name=search_line line -start-insert<CR>
+" nnoremap <leader>j :Unite -buffer-name=jump jump -start-insert<CR>
+" " Custom mappings for the unite buffer
+" autocmd FileType unite call s:unite_settings()
+" function! s:unite_settings()
+"   setlocal nolist nopaste
+"   " Do the right thing on ESC
+"   nmap <buffer> <nowait> q <Plug>(unite_exit)
+"   imap <buffer> <nowait> q <Plug>(unite_exit)
+"   " <Tab> to go to next line
+"   imap <buffer> <TAB>   <Plug>(unite_select_next_line)
+"   " refresh the cache
+"   nmap <buffer> <nowait> <F5>  <Plug>(unite_redraw)
+"   imap <buffer> <nowait> <F5>  <Plug>(unite_redraw)
+"   " change directories in unite
+"   nmap <buffer> <nowait> <leader>cd <Plug>(unite_restart)
+" endfunction
+" " Window config
+" let g:unite_winheight = 10
+" let g:unite_split_rule = 'topleft'
+
+" Magic file open
+" Currently VERY stupid
 " Looks for first file with first matching directory
 " Does not return if file not in first directory
 " TODO:
@@ -709,8 +728,49 @@ function! MagicFileOpen()
     let matches = split(globpath(possible_path, chars[-1] . '*'), "\n")
     echo matches
     if matches != []
-        exe ':find ' . matches[0]
+        silent! exe ':find ' . matches[0]
     endif
 endfunction
-command! MagicFile call MagicFileOpen()
-nnoremap e :MagicFile<CR>
+" command! MagicFile call MagicFileOpen()
+" nnoremap e :MagicFile<CR>
+
+" vim-mustache
+let g:mustache_abbreviations = 1
+
+" vim-session
+let g:session_autoload="no"
+let g:session_autosave="no"
+
+" Search / replace preview
+nnoremap <leader>/ :OverCommandLine<CR>
+
+" Execute shell command and put result in split buffer
+" Stolen from https://opensource.conformal.com/wiki/vim
+function! s:ExecuteInShell(command, bang)
+	let _ = a:bang != '' ? s:_ : a:command == '' ? '' : join(map(split(a:command), 'expand(v:val)'))
+
+	if (_ != '')
+		let s:_ = _
+		let bufnr = bufnr('%')
+		let winnr = bufwinnr('^' . _ . '$')
+		silent! execute  winnr < 0 ? 'new ' . fnameescape(_) : winnr . 'wincmd w'
+		setlocal buftype=nowrite bufhidden=wipe nobuflisted noswapfile nowrap
+		silent! :%d
+		let message = 'Execute ' . _ . '...'
+		call append(0, message)
+		echo message
+		silent! 2d | resize 1 | redraw
+		silent! execute 'silent! %!'. _
+		silent! execute 'resize ' . line('$')
+		silent! execute 'autocmd BufUnload <buffer> execute bufwinnr(' . bufnr . ') . ''wincmd w'''
+		silent! execute 'autocmd BufEnter <buffer> execute ''resize '' .  line(''$'')'
+		silent! execute 'nnoremap <silent> <buffer> <LocalLeader>r :call <SID>ExecuteInShell(''' . _ . ''', '''')<CR>'
+		silent! execute 'nnoremap <silent> <buffer> <LocalLeader>g :execute bufwinnr(' . bufnr . ') . ''wincmd w''<CR>'
+	endif
+endfunction
+
+command! -complete=shellcmd -nargs=* -bang Shell call s:ExecuteInShell(<q-args>, '<bang>')
+cabbrev shell Shell
+
+"nnoremap <leader><Space> :silent !grunt deploy:hf<CR>:redraw!<CR>
+nnoremap <leader><Space> :!grunt deploy:hf<CR>
