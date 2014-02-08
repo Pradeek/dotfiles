@@ -12,88 +12,56 @@ call vundle#rc()
 Bundle 'gmarik/vundle'
 
 " Plugins
-" Window manager
-Bundle 'spolu/dwm.vim'
-" Split management
-Bundle 'roman/golden-ratio'
+" Keep my god-damn splits
 Bundle 'vim-scripts/bufkill.vim'
 " Undo management
 Bundle 'sjl/gundo.vim'
 " VCS
-Bundle 'Lawrencium'
 Bundle 'tpope/vim-fugitive'
-" Terminal/iTerm integration (Macvim)
-Bundle 'gcmt/tube.vim'
 " Tmux integration
 Bundle 'benmills/vimux'
 " Make FocusLost work in vim -> tmux -> iTerm2
 Bundle 'sjl/vitality.vim'
+" Documentation
+Bundle 'Keithbsmiley/investigate.vim'
 " Move between Vim and tmux splits seamlessly
 Bundle 'christoomey/vim-tmux-navigator'
-" Align stuff
-Bundle 'godlygeek/tabular'
-" Repeat plugin commands
-Bundle 'tpope/vim-repeat'
 " Add comments faster
 Bundle 'tpope/vim-commentary'
-" Search / Replace preview
-Bundle 'osyo-manga/vim-over'
-" vimproc
-Bundle 'Shougo/vimproc.vim'
-" outline
-Bundle 'Shougo/unite-outline'
-" vimshell
-Bundle 'Shougo/vimshell.vim'
-" vimfiler
-Bundle 'Shougo/vimfiler.vim'
-" Unite.vim
-Bundle 'Shougo/unite.vim'
-" Unite-ssh
-Bundle 'Shougo/unite-ssh'
-" Unite-mark
-Bundle 'tacroe/unite-mark'
-" Unite-session
-Bundle 'tungd/unite-session'
-Bundle 'xolox/vim-misc'
-Bundle 'xolox/vim-session'
 " Bunch of color schemes
 Bundle 'Colour-Sampler-Pack'
 Bundle 'junegunn/seoul256.vim'
+Bundle 'zenorocha/dracula-theme'
 " Status bar
 Bundle 'bling/vim-airline'
 " Bindings for ack (using ag in the back)
 Bundle 'mileszs/ack.vim'
 " Syntax checker
 Bundle 'scrooloose/syntastic'
+" Shortcuts
+Bundle '29decibel/vim-stringify'
 " File explorer
+Bundle 'kien/ctrlp.vim'
+Bundle 'tacahiroy/ctrlp-funky'
 Bundle 'scrooloose/nerdtree'
 " Zencoding for HTML
 Bundle 'mattn/emmet-vim'
-" Tagbar / Autocomplete / Go to symbol
-Bundle 'majutsushi/tagbar'
-Bundle 'sequenceGeek/MRU-Function'
-" Bundle 'Valloric/YouCompleteMe'
+" Autocomplete
 Bundle 'Shougo/neocomplete.vim'
-Bundle 'travisjeffery/vim-gotosymbol'
 " Go to character
 Bundle 'svermeulen/vim-extended-ft'
 Bundle 'justinmk/vim-sneak'
 " Change surrounding text
 Bundle 'tpope/vim-surround'
 " Snippets
-Bundle 'SirVer/ultisnips'
 Bundle 'Shougo/neosnippet.vim'
-Bundle 'honza/vim-snippets'
 " Adds closing tags automatically
 Bundle 'Raimondi/delimitMate'
+" FuzzyFinder
+Bundle 'vim-scripts/L9'
+Bundle 'vim-scripts/FuzzyFinder'
 " Allows selection of multiple occurances of a patterns for faster changes
-Bundle 'terryma/vim-multiple-cursors'
-" Javascript intelligence
-Bundle 'marijnh/tern_for_vim'
-" Python tools
-Bundle 'davidhalter/jedi-vim'
-" Python linters
-Bundle 'nvie/vim-flake8'
+Bundle 'joedicastro/vim-multiple-cursors'
 " Better syntax
 Bundle 'plasticboy/vim-markdown'
 Bundle 'jelera/vim-javascript-syntax'
@@ -157,6 +125,9 @@ set autoread " Auto reload files changed outside
 set exrc " enable per directory vimrc files
 set secure " disable unsafe commands in those files
 
+" highlight last inserted text
+nnoremap gV `[v`]
+
 " Timeout settings
 set ttimeout
 set ttimeoutlen=100
@@ -189,6 +160,7 @@ set wildignore+=*.orig,*.rej
 
 " Don't backup files.
 set nobackup
+set nowritebackup
 set noswapfile
 
 " Undo across sessions
@@ -203,7 +175,7 @@ set ignorecase " Ignore case when searching
 set smartcase " ignore case if search pattern is lowercase, case sensitive otherwise
 set hlsearch " Hightlight search terms
 " <leader>ll to clear highlighted text
-noremap scls :set nohlsearch<CR>
+noremap scls /asdlasdasdallc<CR>
 set incsearch " Show search matches as you type
 
 " History
@@ -242,15 +214,20 @@ nnoremap <silent> <S-Tab> :bp<CR>
 let mapleader=","
 
 " Annoyances
-" Set leader to , instead of \
 command! -bang -range=% -complete=file -nargs=* W <line1>,<line2>write<bang> <args>
 command! -bang Q quit<bang>
 nnoremap <leader>c :bp\|bd #<CR>
+
 function! MkDirCurrent()
     let current_path = expand("%:h")
     call mkdir(current_path, "p")
 endfunction
 command! MkDirCurrent call MkDirCurrent()
+
+" Quickfix shortcuts
+nnoremap <leader>Q :cclose<CR>
+nnoremap <C-n> :cnext<CR>
+nnoremap <C-p> :cprev<CR>
 
 " Trim trailing spaces
 function! TrimTrailingWhitespace()
@@ -286,14 +263,14 @@ setlocal foldenable
 setlocal foldmethod=expr
 setlocal foldexpr=GetVimScriptFold(v:lnum)
 function! GetVimScriptFold(line_number)
-    let current_line = getline(a:line_number)
-    if current_line =~? '\v^\"'
-        return '1'
-    elseif current_line =~? '\v^\s*$'
-        return '0'
-    else
-        return 1
-    endif
+let current_line = getline(a:line_number)
+if current_line =~? '\v^\"'
+    return '1'
+elseif current_line =~? '\v^\s*$'
+    return '0'
+else
+    return 1
+endif
 endfunction
 endfunction
 
@@ -321,6 +298,7 @@ nnoremap ; :
 " Map jk/kj to ESC key in insert mode
 inoremap jk <ESC>
 inoremap kj <ESC>
+inoremap ;; <ESC>
 
 " Map <leader>e to ESC in insert and visual mode
 inoremap <leader>e <ESC>
@@ -367,6 +345,9 @@ nnoremap - <C-x>
 " Redraw screen
 nnoremap <leader>C :redraw!<CR>
 
+" insert filename without extension
+inoremap \fn <C-R>=expand("%:t:r")<CR>
+
 " Command mappings
 cnoremap %% <C-R>=expand('%:h').'/'<cr>
 
@@ -399,6 +380,9 @@ endfunction
 command! -nargs=1 RemoteEdit call RemoteEditOpen("<args>")
 command! RemoteEditEnd call RemoteEditClose()
 
+" Plugin mappings
+" ================
+
 " Vimux
 nnoremap <leader>r :VimuxPromptCommand <CR>
 nnoremap <leader>r. :VimuxRunLastCommand <CR>
@@ -413,136 +397,47 @@ nnoremap <leader>u :GundoToggle <CR>
 " Tabular mappings
 let mapleader=','
 
-" Tabularize
-nnoremap <Leader>a= :Tabularize /=<CR>
-vnoremap <Leader>a= :Tabularize /=<CR>
-nnoremap <Leader>a: :Tabularize /:\zs<CR>
-vnoremap <Leader>a: :Tabularize /:\zs<CR>
-
 " Disable syntastic plugin for html files since it complains about templates
 " in script tags
 let g:syntastic_enable_highlighting = 0
 let g:syntastic_quiet_warnings=1
-let g:syntastic_mode_map={ 'mode': 'passive',
-            \ 'active_filetypes': [],
-            \ 'passive_filetypes': ['js', 'html'] }
+let g:syntastic_mode_map={ 'mode': 'active',
+        \ 'active_filetypes': [],
+        \ 'passive_filetypes': ['html'] }
 
-" Replaced by Unite.vim - Leaving it here in case I come back
-" CtrlP settings
-" let g:ctrlp_map = '<leader>f'
-" set wildignore+=*.pyc,*.orig,*.rej,*.git/*,*.hg/*
+" CtrlP
+let g:ctrlp_map = '<leader>f'
+nnoremap E :CtrlP %:h<CR>
+nnoremap <leader>bb :CtrlPMRU<CR>
+set wildignore+=*.pyc,*.orig,*.rej,*.git/*,*.hg/*
+let g:ctrlp_switch_buffer = 0 " Always open new buffers
+let g:ctrlp_custom_ignore = {
+  \ 'dir':  '\v((node_modules|tmp|vendor|dist)|[\/]\.(git|hg|svn))$',
+  \ 'file': '\v\.(exe|so|dll)$',
+  \ 'link': 'some_bad_symbolic_links',
+  \ }
+let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
+
+" CtrlP funcky 
+let g:ctrlp_extensions = ['funky']
+nnoremap <Leader>p :CtrlPFunky<Cr>
+" narrow the list down with a word under cursor
+" useful : TODO: Use later in other places
+" nnoremap <Leader>fU :execute 'CtrlPFunky ' . expand('<cword>')<Cr>
 
 " Load local matchit.vim if not loaded
 " Enables % to match open/close parens, blocks, etc
 if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &rtp) ==# ''
-runtime! macros/matchit.vim
+    runtime! macros/matchit.vim
 endif
-
-" YouCompleteMe completion preview
-let g:ycm_add_preview_to_completeopt = 0
-
-" Go To definition
-nnoremap <C-d> :YcmCompleter GoToDefinitionElseDeclaration<CR>
-" nnoremap <C-d>c :YcmCompleter GoToDeclaration<CR>
-" nnoremap <C-d>f :YcmCompleter GoToDefinition<CR>
-
-" Tell YouCompleteMe to take identifiers from tags
-let g:ycm_collect_identifiers_from_tags_files = 1
-let g:ycm_semantic_triggers =  {
-\   'c' : ['->', '.'],
-\   'objc' : ['->', '.'],
-\   'ocaml' : ['.', '#'],
-\   'cpp,objcpp' : ['->', '.', '::'],
-\   'perl' : ['->'],
-\   'php' : ['->', '::'],
-\   'cs,java,vim,python,javascript,perl6,scala,vb,elixir,go' : ['.'],
-\   'ruby' : ['.', '::'],
-\   'lua' : ['.', ':'],
-\   'erlang' : [':'],
-\ }
-
-" Making Ultisnips work with Tab
-let g:UltiSnipsExpandTrigger="<tab>"
-let g:UltiSnipsJumpForwardTrigger="<tab>"
-function! g:UltiSnips_Complete()
-call UltiSnips_ExpandSnippet()
-if g:ulti_expand_res == 0
-if pumvisible()
-return "\<C-n>"
-else
-call UltiSnips_JumpForwards()
-if g:ulti_jump_forwards_res == 0
-    return "\<TAB>"
-endif
-endif
-endif
-return ""
-endfunction
-autocmd BufEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-R>=g:UltiSnips_Complete()<cr>"
-
-" Mapping for GotoSymbol
-nnoremap <leader>t :GotoSymbol
-
-" tern for javascript config
-let g:tern_map_keys=1
-set completeopt-=preview " Don't open the goddamn scratch buffer everytime
 
 " Tell ack.vim to use ag instead.
 let g:ackprg = 'ag --nogroup --nocolor --column'
-
-" Vim python-mode
-autocmd FileType python call s:python_mode_settings()
-function! s:python_mode_settings()
-setlocal wrap
-command! PyLint call Flake8()
-cmap pylint PyLint
-noremap <leader>br :call InsertLine()<CR>
-function! InsertLine()
-    let trace = expand("import ipdb; ipdb.set_trace()")
-    execute "normal o".trace
-endfunction
-endfunction
-" Ignore some these PEP8 errors
-" let g:flake8_ignore="E221,E222,E302"
-let g:syntastic_python_checkers=['flake8']
-let g:syntastic_python_checker_args='--ignore=E221,E222,E302'
-let g:syntastic_python_flake8_post_args='--ignore=E221,E222,E302'
-" E221 - multiple spaces before operator
-" E222 - multiple spaces after operator
-" E302  expected 2 blank lines, found 0
-
-" DWM.vim
-nnoremap <silent> <C-w> :call DWM_New()<CR>
-nnoremap <silent> <leader>q :exec DWM_Close()<CR>
-" The two commands below screw up arrow keys in normal mode
-" nnoremap <silent> <C-]> :call DWM_GrowMaster()<CR>
-" nnoremap <silent> <C-[> :call DWM_ShrinkMaster()<CR>
-" nnoremap <silent> <Tab> :call DWM_Rotate(0)<CR>
-" nnoremap <silent> <S-Tab> :call DWM_Rotate(1)<CR>
-nnoremap <leader>w :wincmd w<CR>
-nnoremap <leader>W :wincmd W<CR>
-let g:dwm_master_pane_width=120
-
-" vimfiler
-let g:vimfiler_as_default_explorer = 1
-
-" jedi-vim config
-autocmd FileType python setlocal omnifunc=jedi#completions
-let g:jedi#auto_vim_configuration = 0
-"let g:neocomplete#force_omni_input_patterns.python = '[^. \t]\.\w*'
-let g:jedi#use_tabs_not_buffers = 0
-let g:jedi#use_splits_not_buffers = "left"
-let g:jedi#goto_assignments_command = "<C-g>"
-let g:jedi#goto_definitions_command = "<C-d>"
-let g:jedi#documentation_command = "K"
-let g:jedi#rename_command = "<leader>re"
-let g:jedi#usages_command = "<leader>n"
-let g:jedi#show_call_signatures = "1"
-let g:jedi#popup_select_first = 1
-let g:jedi#popup_on_dot = 0
+nnoremap <leader>g <ESC>:Ack
+noremap <C-g> :Ack <cword><cr>
 
 " Trying out neocomplete.
-"Note: This option must set it in .vimrc(_vimrc).  NOT IN .gvimrc(_gvimrc)!
+" Note: This option must set it in .vimrc(_vimrc).  NOT IN .gvimrc(_gvimrc)!
 " Disable AutoComplPop.
 let g:acp_enableAtStartup = 0
 " Use neocomplete.
@@ -551,7 +446,6 @@ let g:neocomplete#enable_at_startup = 1
 let g:neocomplete#enable_smart_case = 1
 let g:neocomplete#auto_completion_start_length = 1
 let g:neocomplete#sources#buffer#cache_limit_size = 50000
-
 " Set minimum syntax keyword length.
 let g:neocomplete#sources#syntax#min_keyword_length = 1
 let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
@@ -628,149 +522,70 @@ let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
 imap <C-k>     <Plug>(neosnippet_expand_or_jump)
 smap <C-k>     <Plug>(neosnippet_expand_or_jump)
 xmap <C-k>     <Plug>(neosnippet_expand_target)
-
 " SuperTab like snippets behavior.
 imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-            \ "\<Plug>(neosnippet_expand_or_jump)"
-            \: pumvisible() ? "\<C-n>" : "\<TAB>"
+\ "\<Plug>(neosnippet_expand_or_jump)"
+\: pumvisible() ? "\<C-n>" : "\<TAB>"
 smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-            \ "\<Plug>(neosnippet_expand_or_jump)"
-            \: "\<TAB>"
-
+\ "\<Plug>(neosnippet_expand_or_jump)"
+\: "\<TAB>"
 " For snippet_complete marker.
 if has('conceal')
-      set conceallevel=2 concealcursor=i
+  set conceallevel=2 concealcursor=i
 endif
 let g:neosnippet#enable_snipmate_compatibility = 1
-let g:neosnippet#snippets_directory='~/.vim/bundle/vim-snippets/snippets'
-
-
-" let g:unite_enable_start_insert = 1
-" " Yank history
-" let g:unite_source_history_yank_enable = 1
-" " Cache max of 500 files
-" let g:unite_source_rec_max_cache_files=500
-" " Use ag for search.
-" let g:unite_source_grep_command="ag"
-" let g:unite_source_grep_default_opts="-i --nocolor --nogroup"
-" " Fancy prompts
-" let g:unite_prompt = '» '
-" " Fuzzy search ALL THE THINGS!
-" call unite#filters#matcher_default#use(['matcher_fuzzy'])
-" " Goodbye CtrlP
-" nnoremap <leader>f :Unite -no-split -buffer-name=files -start-insert -auto-resize buffer file file_rec/async<cr>
-" nnoremap <leader>vf :Unite -vertical -buffer-name=files -start-insert -auto-preview file_rec/async<cr>
-" " Buffer list
-" nnoremap <leader>b :Unite -no-split -buffer-name=buffer -start-insert buffer<cr>
-" nnoremap <leader>vb :Unite -vertical -buffer-name=buffer -start-insert buffer<cr>
-" " Tags!
-" nnoremap <leader>p :Unite -no-split -buffer-name=outline -start-insert outline<cr>
-" " Yank history!
-" nnoremap <leader>y :Unite -no-split -buffer-name=yank history/yank<cr>
-" " Go to directory
-" nnoremap <leader>cd :<C-u>Unite -no-split directory_mru directory_rec:. -start-insert -buffer-name=cd -default-action=cd<CR>
-" nnoremap E :UniteWithBufferDir -buffer-name=files buffer file<CR>
-" " Super search
-" nnoremap <leader>g :Unite -buffer-name=search -start-insert -auto-preview grep:.<cr>
-" nnoremap <leader>l /
-" nnoremap / :Unite -buffer-name=search_line line -start-insert<CR>
-" nnoremap <leader>j :Unite -buffer-name=jump jump -start-insert<CR>
-" " Custom mappings for the unite buffer
-" autocmd FileType unite call s:unite_settings()
-" function! s:unite_settings()
-"   setlocal nolist nopaste
-"   " Do the right thing on ESC
-"   nmap <buffer> <nowait> q <Plug>(unite_exit)
-"   imap <buffer> <nowait> q <Plug>(unite_exit)
-"   " <Tab> to go to next line
-"   imap <buffer> <TAB>   <Plug>(unite_select_next_line)
-"   " refresh the cache
-"   nmap <buffer> <nowait> <F5>  <Plug>(unite_redraw)
-"   imap <buffer> <nowait> <F5>  <Plug>(unite_redraw)
-"   " change directories in unite
-"   nmap <buffer> <nowait> <leader>cd <Plug>(unite_restart)
-" endfunction
-" " Window config
-" let g:unite_winheight = 10
-" let g:unite_split_rule = 'topleft'
-
-" Magic file open
-" Currently VERY stupid
-" Looks for first file with first matching directory
-" Does not return if file not in first directory
-" TODO:
-" Integrate with Unite.vim to show list of matches
-" Search for file in all possible subdirectories
-" Add file formats / ignores
-" Try adding second letters for matches
-" Try adding _ as a possible separator
-" Add a cache to make searching large codebases faster
-" Package / Release this as a plugin
-function! MagicFileOpen()
-    let chars = []
-    let nextChar = getchar()
-    while nextChar != 13
-        call add(chars, nr2char(nextChar))
-        let nextChar = getchar()
-    endwhile
-    let possible_path = "."
-    for char in chars
-        let current_path = possible_path
-        let matched_files = split(globpath(current_path, char . '*'), "\n")
-        for matched_file in matched_files
-            if isdirectory(matched_file) == 1
-                let possible_path = matched_file
-                break
-            endif
-        endfor
-    endfor
-    echo possible_path
-    let matches = split(globpath(possible_path, chars[-1] . '*'), "\n")
-    echo matches
-    if matches != []
-        silent! exe ':find ' . matches[0]
-    endif
-endfunction
-" command! MagicFile call MagicFileOpen()
-" nnoremap e :MagicFile<CR>
+let g:neosnippet#snippets_directory='~/.vim/vim-snippets/snippets'
 
 " vim-mustache
 let g:mustache_abbreviations = 1
 
-" vim-session
-let g:session_autoload="no"
-let g:session_autosave="no"
-
-" Search / replace preview
-nnoremap <leader>/ :OverCommandLine<CR>
-
 " Execute shell command and put result in split buffer
 " Stolen from https://opensource.conformal.com/wiki/vim
 function! s:ExecuteInShell(command, bang)
-	let _ = a:bang != '' ? s:_ : a:command == '' ? '' : join(map(split(a:command), 'expand(v:val)'))
+    let _ = a:bang != '' ? s:_ : a:command == '' ? '' : join(map(split(a:command), 'expand(v:val)'))
 
-	if (_ != '')
-		let s:_ = _
-		let bufnr = bufnr('%')
-		let winnr = bufwinnr('^' . _ . '$')
-		silent! execute  winnr < 0 ? 'new ' . fnameescape(_) : winnr . 'wincmd w'
-		setlocal buftype=nowrite bufhidden=wipe nobuflisted noswapfile nowrap
-		silent! :%d
-		let message = 'Execute ' . _ . '...'
-		call append(0, message)
-		echo message
-		silent! 2d | resize 1 | redraw
-		silent! execute 'silent! %!'. _
-		silent! execute 'resize ' . line('$')
-		silent! execute 'autocmd BufUnload <buffer> execute bufwinnr(' . bufnr . ') . ''wincmd w'''
-		silent! execute 'autocmd BufEnter <buffer> execute ''resize '' .  line(''$'')'
-		silent! execute 'nnoremap <silent> <buffer> <LocalLeader>r :call <SID>ExecuteInShell(''' . _ . ''', '''')<CR>'
-		silent! execute 'nnoremap <silent> <buffer> <LocalLeader>g :execute bufwinnr(' . bufnr . ') . ''wincmd w''<CR>'
-	endif
+    if (_ != '')
+        let s:_ = _
+        let bufnr = bufnr('%')
+        let winnr = bufwinnr('^' . _ . '$')
+        silent! execute  winnr < 0 ? 'new ' . fnameescape(_) : winnr . 'wincmd w'
+        setlocal buftype=nowrite bufhidden=wipe nobuflisted noswapfile nowrap
+        silent! :%d
+        let message = 'Execute ' . _ . '...'
+        call append(0, message)
+        echo message
+        silent! 2d | resize 1 | redraw
+        silent! execute 'silent! %!'. _
+        silent! execute 'resize ' . line('$')
+        silent! execute 'autocmd BufUnload <buffer> execute bufwinnr(' . bufnr . ') . ''wincmd w'''
+        silent! execute 'autocmd BufEnter <buffer> execute ''resize '' .  line(''$'')'
+        silent! execute 'nnoremap <silent> <buffer> <LocalLeader>r :call <SID>ExecuteInShell(''' . _ . ''', '''')<CR>'
+        silent! execute 'nnoremap <silent> <buffer> <LocalLeader>g :execute bufwinnr(' . bufnr . ') . ''wincmd w''<CR>'
+    endif
 endfunction
 
 command! -complete=shellcmd -nargs=* -bang Shell call s:ExecuteInShell(<q-args>, '<bang>')
 cabbrev shell Shell
 
-"nnoremap <leader><Space> :silent !grunt deploy:hf<CR>:redraw!<CR>
-nnoremap <leader><Space> :!grunt deploy:hf<CR>
+" Investigate.vim - documentation
+nnoremap K :call investigate#Investigate()<cr>
+
+function! GetVisualSelection()
+  " Why is this not a built-in Vim script function?!
+  let [lnum1, col1] = getpos("'<")[1:2]
+  let [lnum2, col2] = getpos("'>")[1:2]
+  let lines = getline(lnum1, lnum2)
+  let lines[-1] = lines[-1][: col2 - (&selection == 'inclusive' ? 1 : 2)]
+  let lines[0] = lines[0][col1 - 1:]
+  return join(lines, "\n")
+endfunction
+
+function! ExtractVariable()
+    let name = inputdialog("Variable Name : ")
+    if name != ""
+        execute "normal O" . name . " = "
+        normal p
+        execute (line('.')+1) . ",$s/" . escape(getreg('"'), '/\') . "/" . name . "/" 
+    endif
+endfunction
+vnoremap <c-e> y:call ExtractVariable()<cr>

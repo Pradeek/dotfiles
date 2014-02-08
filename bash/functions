@@ -121,6 +121,16 @@ complete -o default -o nospace -F _jump j
 
 # Git/Mercurial helpers
 
+function wat {
+    if [[ -d $PWD/.hg ]]; then
+        hg status
+    else
+        if [[ -d $PWD/.git ]]; then
+            git status
+        fi
+    fi
+}
+
 function diff {
     if [[ -d $PWD/.hg ]]; then
         hg diff -wBb
@@ -131,12 +141,32 @@ function diff {
     fi
 }
 
+function commit {
+    if [[ -d $PWD/.hg ]]; then
+        hg commit -m "$1"
+    else
+        if [[ -d $PWD/.git ]]; then
+            git commit -am "$1"
+        fi
+    fi
+}
+
 function push {
     if [[ -d $PWD/.hg ]]; then
         hg push
     else
         if [[ -d $PWD/.git ]]; then
-            git xpush
+            git push
+        fi
+    fi
+}
+
+function log {
+    if [[ -d $PWD/.hg ]]; then
+        hg log | less
+    else
+        if [[ -d $PWD/.git ]]; then
+            git log | less
         fi
     fi
 }
