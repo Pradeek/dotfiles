@@ -5,68 +5,88 @@ filetype off
 " Shut up!
 set visualbell
 
-" Set up Vundle
-set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
-" let Vundle manage Vundle
-Bundle 'gmarik/vundle'
+" Set up NeoBundle
+set runtimepath+=~/.vim/bundle/neobundle.vim/
+call neobundle#rc(expand('~/.vim/bundle/'))
+
+" let NeoBundle manage NeoBundle
+NeoBundleFetch 'Shougo/neobundle.vim'
+NeoBundle 'Shougo/vimproc.vim'
 
 " Plugins
 " Keep my god-damn splits
-Bundle 'vim-scripts/bufkill.vim'
+NeoBundle 'vim-scripts/bufkill.vim'
+" Switch between stuff
+NeoBundle 'AndrewRadev/switch.vim'
 " Undo management
-Bundle 'sjl/gundo.vim'
+NeoBundle 'sjl/gundo.vim'
 " VCS
-Bundle 'tpope/vim-fugitive'
+NeoBundle 'tpope/vim-fugitive'
+NeoBundle 'airblade/vim-gitgutter'
 " Tmux integration
-Bundle 'benmills/vimux'
+NeoBundle 'benmills/vimux'
 " Make FocusLost work in vim -> tmux -> iTerm2
-Bundle 'sjl/vitality.vim'
-" Documentation
-Bundle 'Keithbsmiley/investigate.vim'
+NeoBundle 'sjl/vitality.vim'
 " Move between Vim and tmux splits seamlessly
-Bundle 'christoomey/vim-tmux-navigator'
+NeoBundle 'christoomey/vim-tmux-navigator'
 " Add comments faster
-Bundle 'tpope/vim-commentary'
+NeoBundle 'tpope/vim-commentary'
 " Bunch of color schemes
-Bundle 'Colour-Sampler-Pack'
-Bundle 'junegunn/seoul256.vim'
-Bundle 'zenorocha/dracula-theme'
+NeoBundle 'Colour-Sampler-Pack'
+NeoBundle 'junegunn/seoul256.vim'
 " Status bar
-Bundle 'bling/vim-airline'
+NeoBundle 'bling/vim-airline'
 " Bindings for ack (using ag in the back)
-Bundle 'mileszs/ack.vim'
+NeoBundle 'mileszs/ack.vim'
 " Syntax checker
-Bundle 'scrooloose/syntastic'
-" Shortcuts
-Bundle '29decibel/vim-stringify'
+NeoBundle 'scrooloose/syntastic'
 " File explorer
-Bundle 'kien/ctrlp.vim'
-Bundle 'tacahiroy/ctrlp-funky'
-Bundle 'scrooloose/nerdtree'
+NeoBundle 'kien/ctrlp.vim'
+NeoBundle 'tacahiroy/ctrlp-funky'
+NeoBundle 'scrooloose/nerdtree'
 " Zencoding for HTML
-Bundle 'mattn/emmet-vim'
+NeoBundle 'mattn/emmet-vim'
 " Autocomplete
-Bundle 'Shougo/neocomplete.vim'
+NeoBundle 'Shougo/neocomplete.vim'
+" NeoBundle 'vim-scripts/SearchComplete'
+NeoBundle 'marijnh/tern_for_vim', {
+            \ 'build': {
+            \   'others': 'npm install'
+            \}}
 " Go to character
-Bundle 'svermeulen/vim-extended-ft'
-Bundle 'justinmk/vim-sneak'
+NeoBundle 'svermeulen/vim-extended-ft'
+NeoBundle 'tpope/vim-rsi'
 " Change surrounding text
-Bundle 'tpope/vim-surround'
+NeoBundle 'tpope/vim-surround'
 " Snippets
-Bundle 'Shougo/neosnippet.vim'
+NeoBundle 'Shougo/neosnippet.vim'
+NeoBundle 'Shougo/neosnippet-snippets'
 " Adds closing tags automatically
-Bundle 'Raimondi/delimitMate'
-" FuzzyFinder
-Bundle 'vim-scripts/L9'
-Bundle 'vim-scripts/FuzzyFinder'
+NeoBundle 'Raimondi/delimitMate'
 " Allows selection of multiple occurances of a patterns for faster changes
-Bundle 'joedicastro/vim-multiple-cursors'
+NeoBundle 'joedicastro/vim-multiple-cursors'
 " Better syntax
-Bundle 'plasticboy/vim-markdown'
-Bundle 'jelera/vim-javascript-syntax'
-Bundle 'django.vim'
-Bundle 'mustache/vim-mode'
+NeoBundle 'plasticboy/vim-markdown'
+NeoBundleLazy 'jelera/vim-javascript-syntax', {'autoload':{'filetypes':['javascript']}}
+NeoBundle 'mustache/vim-mode'
+NeoBundleLazy 'lilydjwg/colorizer', {
+    \ "autoload" : { "commands" : ["css", "scss"] },
+    \ }
+" Misc
+NeoBundle 'tpope/vim-endwise'
+NeoBundle 'tpope/vim-unimpaired'
+" Text objects
+NeoBundle 'kana/vim-textobj-user'
+NeoBundle 'kana/vim-textobj-indent'
+NeoBundle 'coderifous/textobj-word-column.vim'
+" Ruby
+NeoBundleLazy 'vim-ruby/vim-ruby', {'autoload':{'filetypes':['ruby']}}
+NeoBundleLazy 'ecomba/vim-ruby-refactoring', {'autoload':{'filetypes':['ruby']}}
+NeoBundleLazy 'tpope/vim-rails', {'autoload':{'filetypes':['ruby']}}
+" Go
+NeoBundleLazy 'fatih/vim-go', {'autoload': {'filetypes': ['go']}}
+" JavaScript
+NeoBundleLazy 'ahayman/vim-nodejs-complete', {'autoload': {'filetypes': ['javascript']}}
 
 " Buffer movement
 " Look for stuff here
@@ -124,6 +144,12 @@ set autoread " Auto reload files changed outside
 " Folder specific vimrc
 set exrc " enable per directory vimrc files
 set secure " disable unsafe commands in those files
+set ballooneval
+set balloondelay=400
+
+" Show dots on trailing tab or whitespace
+" set list
+" set listchars=tab:>.,trail:.,extends:#,nbsp:.
 
 " highlight last inserted text
 nnoremap gV `[v`]
@@ -159,9 +185,9 @@ set wildignore+=*.swp,*~,._*
 set wildignore+=*.orig,*.rej
 
 " Don't backup files.
-set nobackup
-set nowritebackup
-set noswapfile
+set backup
+set backupdir=~/.vim/backup
+set directory=~/.vim/tmp
 
 " Undo across sessions
 set undodir=~/.vim-undo
@@ -218,11 +244,15 @@ command! -bang -range=% -complete=file -nargs=* W <line1>,<line2>write<bang> <ar
 command! -bang Q quit<bang>
 nnoremap <leader>c :bp\|bd #<CR>
 
-function! MkDirCurrent()
-    let current_path = expand("%:h")
-    call mkdir(current_path, "p")
-endfunction
-command! MkDirCurrent call MkDirCurrent()
+augroup vimrc-auto-mkdir  " {{{
+  autocmd!
+  autocmd BufWritePre * call s:auto_mkdir(expand('<afile>:p:h'))
+  function! s:auto_mkdir(dir)  " {{{
+    if !isdirectory(a:dir)
+      call mkdir(iconv(a:dir, &encoding, &termencoding), 'p')
+    endif
+  endfunction  " }}}
+augroup END  " }}}
 
 " Quickfix shortcuts
 nnoremap <leader>Q :cclose<CR>
@@ -250,7 +280,7 @@ autocmd FileType json nnoremap <leader>js :%!python -m json.tool<CR>
 " Fix html indent
 autocmd FileType html setlocal indentkeys-=*<Return>
 " Trim trialing whitespace always
-" autocmd BufWrite * :call TrimTrailingWhitespace()
+autocmd BufWrite * :call TrimTrailingWhitespace()
 " Jump to the last position when reopening a file
 autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 endif
@@ -280,7 +310,7 @@ endfunction
 autocmd FileType html call s:HtmlSettings()
 autocmd FileType htmldjango call s:HtmlSettings()
 function! s:HtmlSettings()
-nnoremap <space> Vatzf
+"nnoremap <space> Vatzf
 nnoremap <leader>re :silent !chrome-reload-current<CR>:redraw!<CR>
 endfunction
 
@@ -292,21 +322,15 @@ vnoremap > >gv
 inoremap <leader>o <ESC>O
 nnoremap <leader>o <ESC>O
 
-" Map ; to :
-nnoremap ; :
-
 " Map jk/kj to ESC key in insert mode
 inoremap jk <ESC>
 inoremap kj <ESC>
-inoremap ;; <ESC>
 
 " Map <leader>e to ESC in insert and visual mode
 inoremap <leader>e <ESC>
 vnoremap <leader>e <ESC>
 
 " Emacs key-binding in vim!
-inoremap <C-a> <C-o>0
-inoremap <C-e> <C-o>$
 nnoremap <C-e> $
 nnoremap <C-a> 0
 
@@ -394,21 +418,26 @@ vnoremap <leader>nt :NERDTreeToggle <CR>
 " Gundo mapping
 nnoremap <leader>u :GundoToggle <CR>
 
-" Tabular mappings
-let mapleader=','
-
-" Disable syntastic plugin for html files since it complains about templates
-" in script tags
-let g:syntastic_enable_highlighting = 0
-let g:syntastic_quiet_warnings=1
-let g:syntastic_mode_map={ 'mode': 'active',
-        \ 'active_filetypes': [],
-        \ 'passive_filetypes': ['html'] }
+" Syntastic
+" Don't bother checking when I close Vim
+let g:syntastic_check_on_wq = 0
+let g:syntastic_error_symbol = '✗'
+let g:syntastic_warning_symbol = '⚠'
+let g:syntastic_enable_balloons = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_loc_list_height = 5
+let g:syntastic_ignore_files = ['\m^/tmp/', '\.html$']
+let g:syntastic_javascript_checkers = ['jshint']
+let g:syntastic_mode_map = { 'mode': 'active',
+                           \ 'active_filetypes': ['ruby', 'javascript'],
+                           \ 'passive_filetypes': ['handlebars', 'python', 'hbs', 'html'] }
 
 " CtrlP
 let g:ctrlp_map = '<leader>f'
 nnoremap E :CtrlP %:h<CR>
-nnoremap <leader>bb :CtrlPMRU<CR>
+nnoremap VE :vsp <CR> :CtrlP %:h<CR>
+nnoremap <leader>b :CtrlPBuffer<CR>
+nnoremap <leader>m :CtrlPMRU<CR>
 set wildignore+=*.pyc,*.orig,*.rej,*.git/*,*.hg/*
 let g:ctrlp_switch_buffer = 0 " Always open new buffers
 let g:ctrlp_custom_ignore = {
@@ -418,7 +447,7 @@ let g:ctrlp_custom_ignore = {
   \ }
 let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
 
-" CtrlP funcky 
+" CtrlP funcky
 let g:ctrlp_extensions = ['funky']
 nnoremap <Leader>p :CtrlPFunky<Cr>
 " narrow the list down with a word under cursor
@@ -435,6 +464,9 @@ endif
 let g:ackprg = 'ag --nogroup --nocolor --column'
 nnoremap <leader>g <ESC>:Ack
 noremap <C-g> :Ack <cword><cr>
+
+" Fugitive
+cnoremap gs Gstatus
 
 " Trying out neocomplete.
 " Note: This option must set it in .vimrc(_vimrc).  NOT IN .gvimrc(_gvimrc)!
@@ -472,34 +504,15 @@ inoremap <expr><C-l>     neocomplete#complete_common_string()
 inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
 function! s:my_cr_function()
   return neocomplete#smart_close_popup() . "\<CR>"
-  " For no inserting <CR> key.
-  "return pumvisible() ? neocomplete#close_popup() : "\<CR>"
 endfunction
 " <TAB>: completion.
 inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-" <C-h>, <BS>: close popup and delete backword char.
 inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
 inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
 inoremap <expr><C-y>  neocomplete#close_popup()
 inoremap <expr><C-e>  neocomplete#cancel_popup()
-" Close popup by <Space>.
-"inoremap <expr><Space> pumvisible() ? neocomplete#close_popup() : "\<Space>"
-" For cursor moving in insert mode(Not recommended)
-"inoremap <expr><Left>  neocomplete#close_popup() . "\<Left>"
-"inoremap <expr><Right> neocomplete#close_popup() . "\<Right>"
-"inoremap <expr><Up>    neocomplete#close_popup() . "\<Up>"
-"inoremap <expr><Down>  neocomplete#close_popup() . "\<Down>"
-" Or set this.
-" let g:neocomplete#enable_cursor_hold_i = 1
-" Or set this.
-"let g:neocomplete#enable_insert_char_pre = 1
 " AutoComplPop like behavior.
-let g:neocomplete#enable_auto_select = 1
-" Shell like behavior(not recommended).
-"set completeopt+=longest
-"let g:neocomplete#enable_auto_select = 1
-"let g:neocomplete#disable_auto_complete = 1
-"inoremap <expr><TAB>  pumvisible() ? "\<Down>" : "\<C-x>\<C-u>"
+" let g:neocomplete#enable_auto_select = 1
 " Enable omni completion.
 autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
 autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
@@ -510,12 +523,6 @@ autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 if !exists('g:neocomplete#sources#omni#input_patterns')
   let g:neocomplete#sources#omni#input_patterns = {}
 endif
-"let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
-"let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
-"let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
-" For perlomni.vim setting.
-" https://github.com/c9s/perlomni.vim
-let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
 
 " Neosnippet config
 " Plugin key-mappings.
@@ -539,16 +546,40 @@ let g:neosnippet#snippets_directory='~/.vim/vim-snippets/snippets'
 " vim-mustache
 let g:mustache_abbreviations = 1
 
+" Tell emmet.vim to load only for HTML/CSS
+let g:user_emmet_install_global = 0
+autocmd FileType html,hbs,css,scss EmmetInstall
+
+" Switch plugin
+nnoremap ;; :Switch<CR>
+let g:switch_custom_definitions = [
+      \   [0, 1],
+      \   ['if', 'unless'],
+      \   ['while', 'until'],
+      \   ['\.blank?', '\.present?'],
+      \   ['be_blank', 'be_present'],
+      \   ['include', 'extend'],
+      \   ['class', 'module'],
+      \   ['.inject', '.delete_if'],
+      \   ['.map', '.map!'],
+      \   ['attr_accessor', 'attr_reader', 'attr_writer'],
+      \   ['describe', 'context', 'specific', 'example'],
+      \   ['before', 'after'],
+      \   ['be_true', 'be_false'],
+      \   ['get', 'post', 'put', 'delete'],
+      \   ['==', 'eql', 'equal'],
+      \   [ '\.should_not', '\.should' ],
+      \ ]
+
 " Execute shell command and put result in split buffer
 " Stolen from https://opensource.conformal.com/wiki/vim
 function! s:ExecuteInShell(command, bang)
     let _ = a:bang != '' ? s:_ : a:command == '' ? '' : join(map(split(a:command), 'expand(v:val)'))
-
     if (_ != '')
         let s:_ = _
         let bufnr = bufnr('%')
-        let winnr = bufwinnr('^' . _ . '$')
         silent! execute  winnr < 0 ? 'new ' . fnameescape(_) : winnr . 'wincmd w'
+        let winnr = bufwinnr('^' . _ . '$')
         setlocal buftype=nowrite bufhidden=wipe nobuflisted noswapfile nowrap
         silent! :%d
         let message = 'Execute ' . _ . '...'
@@ -563,13 +594,10 @@ function! s:ExecuteInShell(command, bang)
         silent! execute 'nnoremap <silent> <buffer> <LocalLeader>g :execute bufwinnr(' . bufnr . ') . ''wincmd w''<CR>'
     endif
 endfunction
-
 command! -complete=shellcmd -nargs=* -bang Shell call s:ExecuteInShell(<q-args>, '<bang>')
 cabbrev shell Shell
 
-" Investigate.vim - documentation
-nnoremap K :call investigate#Investigate()<cr>
-
+" Custom refactoring functions (should replace with a plugin)
 function! GetVisualSelection()
   " Why is this not a built-in Vim script function?!
   let [lnum1, col1] = getpos("'<")[1:2]
@@ -585,7 +613,16 @@ function! ExtractVariable()
     if name != ""
         execute "normal O" . name . " = "
         normal p
-        execute (line('.')+1) . ",$s/" . escape(getreg('"'), '/\') . "/" . name . "/" 
+        execute (line('.')+1) . ",$s/" . escape(getreg('"'), '/\') . "/" . name . "/"
     endif
 endfunction
 vnoremap <c-e> y:call ExtractVariable()<cr>
+
+" autocmd Filetype javascript setlocal ts=2 sts=2 sw=2
+" autocmd Filetype hbs setlocal ts=2 sts=2 sw=2
+" autocmd Filetype html setlocal ts=2 sts=2 sw=2
+" autocmd Filetype css setlocal ts=2 sts=2 sw=2
+" autocmd Filetype scss setlocal ts=2 sts=2 sw=2
+
+nnoremap <leader>v ggvG$
+nnoremap <space> ggvG$:

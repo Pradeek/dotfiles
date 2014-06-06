@@ -12,12 +12,17 @@ eval "$(rbenv init -)"
 function vcs_status() {
    vcprompt --format="[%s:%b]%m%a%u" -A "!" -M "!"
 }
+function venv_status() {
+    if [[ $VIRTUAL_ENV ]]; then
+        basename $VIRTUAL_ENV
+    fi
+}
 
 [[ -s $HOME/.tmuxinator/scripts/tmuxinator ]] && source $HOME/.tmuxinator/scripts/tmuxinator
 
 # Go crazy
-PS2="\[${GREEN}\]\[${BOLD}\]\$>\[${NORMAL}\] "
 function on_prompt() {
+    PS2="\[${YELLOW}\]$(venv_status) \[${GREEN}\]\[${BOLD}\]\$>\[${NORMAL}\] "
     left="\[${CYAN}\]\u\[${NORMAL}\] at \[${YELLOW}\]\h\[${NORMAL}\] in \[${RED}\]\w\[${NORMAL}\] "
     vc_info="\[${GREEN}\]$(vcs_status)"
     PS1="$(printf "%s%s\n%s" "${left}" "${vc_info}" "${PS2}")"

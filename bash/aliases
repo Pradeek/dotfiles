@@ -39,9 +39,11 @@ alias resolved='hg resolve -m $_'
 
 # Git
 alias gl='git log --graph --pretty=format:"%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset" --abbrev-commit'
-
-# Vagrant
-alias recreate='vagrant destroy --force && vagrant up'
+alias ga='git add .'
+alias gc='git commit -m'
+alias gd='git diff'
+alias gs='git status'
+alias gdc='git diff --cached'
 
 # Fix common typos
 alias exot='exit'
@@ -55,7 +57,14 @@ alias json='python -mjson.tool'
 alias n='cd ~/Dropbox/Notes/ && ls'
 alias t='vim ~/Dropbox/Notes/todo.txt'
 
-# Vagrant helper
-alias vagrant_ssh='ssh -i ~/.vagrant.d/insecure_private_key vagrant@'
-
 alias internet='ping 8.8.8.8'
+
+# Vagrant
+alias vs='vagrant ssh'
+alias vu='vagrant up'
+alias vr='vagrant reload'
+alias vh='vagrant halt'
+alias ve='vim Vagrantfile'
+
+alias recreate='vagrant destroy --force && vagrant up --provision'
+alias vagrant_ssh='ssh -i ~/.vagrant.d/insecure_private_key vagrant@'
