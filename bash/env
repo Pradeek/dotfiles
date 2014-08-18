@@ -4,8 +4,6 @@ export MANPAGER="less -X" # Don’t clear the screen after quitting a manual pag
 
 export EDITOR='vim'
 
-eval "$(rbenv init -)"
-
 # Added z
 . ~/bin/z
 

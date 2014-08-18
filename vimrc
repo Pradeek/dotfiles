@@ -6,6 +6,7 @@ filetype off
 set visualbell
 
 " Set up NeoBundle
+let g:neocomplete#enable_at_startup = 1
 set runtimepath+=~/.vim/bundle/neobundle.vim/
 call neobundle#rc(expand('~/.vim/bundle/'))
 
@@ -14,10 +15,14 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 NeoBundle 'Shougo/vimproc.vim'
 
 " Plugins
+NeoBundle 'tomtom/quickfixsigns_vim'
 " Keep my god-damn splits
 NeoBundle 'vim-scripts/bufkill.vim'
+" Show me which paren I'm on
+NeoBundle 'chreekat/vim-paren-crosshairs'
 " Switch between stuff
 NeoBundle 'AndrewRadev/switch.vim'
+NeoBundle 'tpope/vim-dispatch'
 " Undo management
 NeoBundle 'sjl/gundo.vim'
 " VCS
@@ -67,7 +72,7 @@ NeoBundle 'Raimondi/delimitMate'
 NeoBundle 'joedicastro/vim-multiple-cursors'
 " Better syntax
 NeoBundle 'plasticboy/vim-markdown'
-NeoBundleLazy 'jelera/vim-javascript-syntax', {'autoload':{'filetypes':['javascript']}}
+NeoBundleLazy 'pangloss/vim-javascript', {'autoload':{'filetypes':['javascript']}}
 NeoBundle 'mustache/vim-mode'
 NeoBundleLazy 'lilydjwg/colorizer', {
     \ "autoload" : { "commands" : ["css", "scss"] },
@@ -76,9 +81,13 @@ NeoBundleLazy 'lilydjwg/colorizer', {
 NeoBundle 'tpope/vim-endwise'
 NeoBundle 'tpope/vim-unimpaired'
 " Text objects
+NeoBundle 'machakann/vim-textobj-delimited'
 NeoBundle 'kana/vim-textobj-user'
 NeoBundle 'kana/vim-textobj-indent'
 NeoBundle 'coderifous/textobj-word-column.vim'
+" Python
+NeoBundleLazy 'ivanov/vim-ipython', {'autoload': {'filetypes': ['python']}}
+NeoBundleLazy 'davidhalter/jedi-vim', {'autoload': {'filetypes': ['python']}}
 " Ruby
 NeoBundleLazy 'vim-ruby/vim-ruby', {'autoload':{'filetypes':['ruby']}}
 NeoBundleLazy 'ecomba/vim-ruby-refactoring', {'autoload':{'filetypes':['ruby']}}
@@ -86,7 +95,7 @@ NeoBundleLazy 'tpope/vim-rails', {'autoload':{'filetypes':['ruby']}}
 " Go
 NeoBundleLazy 'fatih/vim-go', {'autoload': {'filetypes': ['go']}}
 " JavaScript
-NeoBundleLazy 'ahayman/vim-nodejs-complete', {'autoload': {'filetypes': ['javascript']}}
+NeoBundleLazy 'mxw/vim-jsx', {'autoload': {'filetypes': ['javascript']}}
 
 " Buffer movement
 " Look for stuff here
@@ -150,9 +159,6 @@ set balloondelay=400
 " Show dots on trailing tab or whitespace
 " set list
 " set listchars=tab:>.,trail:.,extends:#,nbsp:.
-
-" highlight last inserted text
-nnoremap gV `[v`]
 
 " Timeout settings
 set ttimeout
@@ -275,10 +281,12 @@ autocmd BufWritePost .vimrc source %
 autocmd FocusLost * silent! wa
 " Treat .json files as .js
 autocmd BufNewFile,BufRead *.json setfiletype json syntax=javascript
+" Treat ejs files as html
+autocmd BufNewFile,BufRead *.ejs set filetype=html
 " JSON formatting
 autocmd FileType json nnoremap <leader>js :%!python -m json.tool<CR>
 " Fix html indent
-autocmd FileType html setlocal indentkeys-=*<Return>
+" autocmd FileType html setlocal indentkeys-=*<Return>
 " Trim trialing whitespace always
 autocmd BufWrite * :call TrimTrailingWhitespace()
 " Jump to the last position when reopening a file
@@ -424,13 +432,17 @@ let g:syntastic_check_on_wq = 0
 let g:syntastic_error_symbol = '✗'
 let g:syntastic_warning_symbol = '⚠'
 let g:syntastic_enable_balloons = 1
-let g:syntastic_auto_loc_list = 1
+let g:syntastic_auto_loc_list = 0
 let g:syntastic_loc_list_height = 5
+" let g:syntastic_quiet_messages = { "level": "warnings" }
+let g:syntastic_python_checkers = ['pylint']
+" let g:syntastic_python_pylint_args = '--generated-members=objects,_meta,id,REQUEST,META,[a-zA-Z]+_set'
+" let g:syntastic_python_pylint_post_args = '--rcfile=~/pylintrc'
 let g:syntastic_ignore_files = ['\m^/tmp/', '\.html$']
 let g:syntastic_javascript_checkers = ['jshint']
 let g:syntastic_mode_map = { 'mode': 'active',
-                           \ 'active_filetypes': ['ruby', 'javascript'],
-                           \ 'passive_filetypes': ['handlebars', 'python', 'hbs', 'html'] }
+                           \ 'active_filetypes': ['ruby', 'python'],
+                           \ 'passive_filetypes': ['handlebars', 'hbs', 'html', 'javascript'] }
 
 " CtrlP
 let g:ctrlp_map = '<leader>f'
@@ -441,11 +453,16 @@ nnoremap <leader>m :CtrlPMRU<CR>
 set wildignore+=*.pyc,*.orig,*.rej,*.git/*,*.hg/*
 let g:ctrlp_switch_buffer = 0 " Always open new buffers
 let g:ctrlp_custom_ignore = {
-  \ 'dir':  '\v((node_modules|tmp|vendor|dist)|[\/]\.(git|hg|svn))$',
+  \ 'dir':  '\v[\/]\.(git|hg|svn)$',
   \ 'file': '\v\.(exe|so|dll)$',
   \ 'link': 'some_bad_symbolic_links',
   \ }
-let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
+let g:ctrlp_custom_ignore = {
+  \ 'dir':  '\v((node_modules|public\/bower_components|tmp|vendor|dist|.git))|[\/]\.(git|hg|svn)$',
+  \ 'file': '\v\.(git|exe|so|dll)$',
+  \ 'link': 'some_bad_symbolic_links',
+  \ }
+" let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
 
 " CtrlP funcky
 let g:ctrlp_extensions = ['funky']
@@ -467,6 +484,25 @@ noremap <C-g> :Ack <cword><cr>
 
 " Fugitive
 cnoremap gs Gstatus
+
+" Eclim
+" function! s:EclimSettings()
+"     let g:EclimFileTypeValidate = 1
+"     let g:EclimValidateSortResults = 'severity'
+"     " nnoremap <silent> <cr> :PythonSearchContext<cr>
+"     nnoremap <silent> <cr> :DjangoContextOpen<cr>
+"     let g:EclimCompletionMethod = 'omnifunc'
+"     nnoremap <leader>nt :ProjectTreeToggle<CR>
+" endfunction
+" autocmd FileType python call s:EclimSettings()
+
+" jedi-vim
+autocmd FileType python setlocal omnifunc=jedi#completions
+let g:jedi#completions_enabled = 1
+let g:jedi#auto_vim_configuration = 0
+let g:jedi#use_tabs_not_buffers = 0
+let g:jedi#use_splits_not_buffers = "right"
+let g:jedi#popup_select_first = 0
 
 " Trying out neocomplete.
 " Note: This option must set it in .vimrc(_vimrc).  NOT IN .gvimrc(_gvimrc)!
@@ -495,6 +531,7 @@ let g:neocomplete#keyword_patterns['default'] = '\h\w*'
 if !exists('g:neocomplete#force_omni_input_patterns')
   let g:neocomplete#force_omni_input_patterns = {}
 endif
+let g:neocomplete#force_omni_input_patterns.python = '\%([^. \t]\.\|^\s*@\|^\s*from\s.\+import \|^\s*from \|^\s*import \)\w*'
 let g:neocomplete#force_omni_input_patterns.javascript = '[^. \t]\.\w*'
 " Plugin key-mappings.
 inoremap <expr><C-g>     neocomplete#undo_completion()
@@ -618,11 +655,26 @@ function! ExtractVariable()
 endfunction
 vnoremap <c-e> y:call ExtractVariable()<cr>
 
-" autocmd Filetype javascript setlocal ts=2 sts=2 sw=2
-" autocmd Filetype hbs setlocal ts=2 sts=2 sw=2
-" autocmd Filetype html setlocal ts=2 sts=2 sw=2
-" autocmd Filetype css setlocal ts=2 sts=2 sw=2
-" autocmd Filetype scss setlocal ts=2 sts=2 sw=2
+autocmd Filetype javascript setlocal ts=2 sts=2 sw=2 foldlevel=2
+autocmd Filetype hbs setlocal ts=2 sts=2 sw=2
+autocmd Filetype html setlocal ts=2 sts=2 sw=2
+autocmd Filetype css setlocal ts=2 sts=2 sw=2
+autocmd Filetype scss setlocal ts=2 sts=2 sw=2
 
 nnoremap <leader>v ggvG$
 nnoremap <space> ggvG$:
+
+" Run macros with Q
+nnoremap Q @q
+vnoremap Q :norm @q<cr>
+
+nnoremap <leader>ne :lnext<CR>
+
+inoremap <C-c> <CR><Esc>O
+inoremap u8 *
+inoremap i9 (
+inoremap o0 )
+
+let g:jedi#popup_select_first = 0
+let g:jedi#goto_definitions_command = "<leader><space>"
+let g:neocomplete#enable_auto_select = 0

@@ -24,7 +24,6 @@ function d() {
 # Source bash completion
 if [ -f $(brew --prefix)/etc/bash_completion ]; then
   . $(brew --prefix)/etc/bash_completion
-  . $(brew --prefix)/etc/bash_completion.d/vagrant
 fi
 
 # Temporary alias to restart Virtualbox
@@ -32,3 +31,8 @@ alias vbox_restart='sudo /Library/StartupItems/VirtualBox/VirtualBox restart'
 
 # Livereload everything
 alias livereload='watchmedo shell-command --patterns="*.py;*.html;*.css;*.js" --recursive --command "sleep 4 && chrome-reload-current"'
+
+function init_docker() {
+    boot2docker start
+    export DOCKER_HOST=tcp://$(boot2docker ip 2>/dev/null):2375
+}

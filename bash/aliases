@@ -3,6 +3,7 @@ alias ls='ls --color=auto'
 alias sl=ls
 alias la='ls -a'
 alias ll='ls -al'
+alias kk='ls -al' # I'm a terrible typist
 alias c='clear'
 alias q='exit'
 alias v='vim'
