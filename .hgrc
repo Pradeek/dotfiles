@@ -1,0 +1,26 @@
+# example config (see "hg help config" for more info)
+
+[ui]
+# name and email, e.g.
+# username = Jane Doe <jdoe@example.com>
+username = Pradeek <pradeek@tenmiles.com>
+merge = internal:merge
+ignore = ~/.hgignore
+
+[alias]
+diff = diff --git -wBb
+whathappened = log -l 5 --template "{rev}:{author}:{desc}\n"
+glog = log -G --style compact
+srslywtfhappened = log -G --style compact -l 10
+whereisthisfrom = log -r "parents(min(branch(.)))"
+whodidit = blame -uldqwbBn
+onelinelog = log --template "{rev}:{author}:{desc}\n"
+closebranch = commit -m "closing branch" --close-branch
+
+[extensions]
+hggit =
+# uncomment these lines to enable some popular extensions
+# (see "hg help extensions" for more info)
+# pager =
+# progress =
+# color =
