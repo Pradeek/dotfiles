@@ -1,5 +1,5 @@
-# Calling it here as well since I'm setting up some important PATHs
 # TODO: Move common dependant envs into this folder
+# Calling it here as well since I'm setting up some important PATHs
 # System specific stuff that shouldn't be in git
 if [ -f ~/.bashrc.local ]; then
   source ~/.bashrc.local
@@ -22,8 +22,7 @@ if [ -f ~/.bashrc.local ]; then
   source ~/.bashrc.local
 fi
 
-### Added by the Heroku Toolbelt
-export PATH="/usr/local/heroku/bin:$PATH"
+export PATH="/usr/local/bin:$PATH"
 
 # Setting for the new UTF-8 terminal support in Lion
 export LC_CTYPE=en_US.UTF-8

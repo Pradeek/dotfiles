@@ -58,7 +58,7 @@ alias json='python -mjson.tool'
 alias n='cd ~/Dropbox/Notes/ && ls'
 alias t='vim ~/Dropbox/Notes/todo.txt'
 
-alias internet='ping 8.8.8.8'
+alias internet='ping 208.67.220.220'
 
 # Vagrant
 alias vs='vagrant ssh'

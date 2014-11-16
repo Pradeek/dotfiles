@@ -6,7 +6,7 @@ files=( "bashrc" "inputrc" "vimrc" "gvimrc" "tmux.conf" )
 echo "Taking backup of existing files"
 for file in "${files[@]}"
 do
-  if [ ! -f ~/.$file.old ]; then
+  if [ -f ~/.$file.old ]; then
     mv ~/.$file ~/.$file.old
   else
     echo "Backup for .$file already exists"

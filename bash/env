@@ -5,7 +5,7 @@ export MANPAGER="less -X" # Don’t clear the screen after quitting a manual pag
 export EDITOR='vim'
 
 # Added z
-. ~/bin/z
+#. ~/bin/z
 
 function vcs_status() {
    vcprompt --format="[%s:%b]%m%a%u" -A "!" -M "!"

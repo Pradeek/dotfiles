@@ -36,3 +36,7 @@ function init_docker() {
     boot2docker start
     export DOCKER_HOST=tcp://$(boot2docker ip 2>/dev/null):2375
 }
+
+function notify() {
+    osascript -e 'display notification $2 with title $1 subtitle "Terminal"'
+}

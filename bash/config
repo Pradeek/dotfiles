@@ -4,7 +4,7 @@ shopt -s dotglob # Include '.' files in file name expansions
 shopt -s extglob # Enable pattern matching using ?, *, [...]
 shopt -s nocaseglob # Case insensitive filename expansion
 shopt -s checkwinsize # Check window size after each command and updates lines and columns if necessary
-shopt -s autocd # `**/qux` will enter `./foo/bar/baz/qux`
+#shopt -s autocd # `**/qux` will enter `./foo/bar/baz/qux`
 
 # History management
 export HISTSIZE=1000000
@@ -15,7 +15,7 @@ export HISTCONTROL=ignoreboth:erasedups # Ignore same successive entries and rem
 export HISTIGNORE="ls:exit:clear:c" # Ignore common commands from history
 export HISTTIMEFORMAT='%F %T ' # Add date/time to history
 
-# Colors 
+# Colors
 BLACK=$(tput setaf 0)
 RED=$(tput setaf 1)
 GREEN=$(tput setaf 2)
