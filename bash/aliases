@@ -54,6 +54,8 @@ alias vom='vim'
 # Pretty print json
 alias json='python -mjson.tool'
 
+alias haskell='runghc'
+
 # Aliases for notes
 alias n='cd ~/Dropbox/Notes/ && ls'
 alias t='vim ~/Dropbox/Notes/todo.txt'
